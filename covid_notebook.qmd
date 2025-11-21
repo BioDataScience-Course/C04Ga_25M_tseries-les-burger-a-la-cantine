@@ -46,8 +46,13 @@ SciViews::R("ts")
 # Anaïs
 covid <- read("data/mobility_wallonia.rds")
 #Un remaniement des données est nécessaire pour renommer les variables de manière claire
-covid <- smutate(covid,
-  retail_and_recreation_percent_from_baseline = labelise(retail_and_recreation_percent_from_baseline, "Commerce de détails et loisirs"))
+covid <- srename(covid, retail_and_recreation_percent_change_from_baseline = retail_recreation,
+  grocery_and_pharmacy_percent_change_from_baseline = grocery_pharmacy,
+  parks_percent_change_from_baseline = parks,
+  transit_stations_percent_change_from_baseline = transit,
+  workplaces_percent_change_from_baseline = workplaces,
+  residential_percent_change_from_baseline = residential)
+  
 skimr::skim(covid)
 ```
 Notre jeu de données que nous nommons "covid" possède 974 observations pour 7 variables. Nous avons 1 observation par jour, du 15 février 2020 au 15 octobre 2022. Nous allons représenter ces données sous forme de série chronologique.
@@ -59,7 +64,7 @@ covid_ts <- ts(covid, start = c(2020, 2, 15), end = c(2022, 10, 15), frequency =
 class(covid_ts)
 plot(covid_ts)
 ```
-Pour chaque variable, une série chronologique est créée. Au 0, c'st la valeur de départ, le déplacement "classique". Quand la valeur est négative, le taux de déplacement est moindre comparé aux années d'avant "normales". Quand elle est positive, le déplacement est supérieur par rapport aux années d'avant.
+Pour chaque variable, une série chronologique est créée. Au 0, c'est la valeur de départ, le déplacement "classique", normal, pas de déplacement supplémentaire ou moins de déplacement pour la raison de la variable. Quand la valeur est négative, le taux de déplacement est moindre comparé aux années d'avant "normales". Quand elle est positive, le déplacement est supérieur par rapport aux années d'avant.
 
 
 ```{r statistiques glissantes}
