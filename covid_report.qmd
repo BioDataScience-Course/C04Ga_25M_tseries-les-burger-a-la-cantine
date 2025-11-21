@@ -25,6 +25,12 @@ lang: fr
 
 <!--% Cette section doit comprendre deux parties. La première partie doit expliciter le données employées et la seconde traiter des analyses réalisées et des logiciels employés.-->
 
+Cette étude s'appuie sur des données de mobilité communautaire fournies par Google, couvrant la période 2020-2022 de la pandémie de COVID-19 dans 135 pays. Ces données anonymisées et agrégées, issues notamment de Google Maps, ont constitué un outil précieux pour les autorités de santé publique dans leur prise de décision.
+Les rapports de mobilité présentent l'évolution des déplacements selon les zones géographiques et les catégories de lieux : commerces et espaces de loisirs, magasins d'alimentation et pharmacies, parcs, espaces publics, lieux de travail et zones résidentielles. Cette segmentation a permis de mesurer l'impact des mesures sanitaires mises en place pour lutter contre la propagation du virus.   
+
+L'analyse est réalisée avec la SciViews Box 2023 dans Saturn Cloud (Linux), utilisant le logiciel R (r R.version.string). Le package {pastecs} version r packageVersion("pastecs") est utilisé pour étudier la série temporelle. 
+
+
 ## Résultats
 
 <!--% Présentez les analyses les plus pertinents que vous avez sélectionnés. Structurez la section en partie avec des titres explicites de niveau trois.-->
