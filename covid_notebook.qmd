@@ -1,6 +1,6 @@
 ---
-title: "___"
-author: "___"
+title: "Mobilité en Wallonie avant et pendant la pandémie du Covid-19"
+author: "Hocquet Anaïs, Lebourgeois Solène & Vanderhaegen Lucie"
 format:
   html:
     code-fold: true
