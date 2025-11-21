@@ -43,30 +43,38 @@ SciViews::R("ts")
 <!--% Ajoutez le nombre de chunks que vous souhaitez. Répartissez-vous le travail correctement. Structurez la section en partie avec des titres explicites de niveau trois.-->
 ```{r importation}
 # Importation des données et descriptions de celles-ci avec représentation graphique
+# Anaïs
+
 ```
 
 ```{r ts}
 # création de l'objet ts ou mts + vérification avec class() + visualisation des données
+# Anaïs
 ```
 
 ```{r statistiques glissantes}
 # statistiques glissantes
+# Lucie
 ```
 
 ```{r autocorrélation}
 # Autocorrélation
+# Solène
 ```
 
 ```{r tendance générale}
 # tendance générale avec bootstrap
+# Anaïs
 ```
 
 ```{r analyse spectrale}
 # analyse spectrale
+# Lucie
 ```
 
 ```{r tendance locale}
 # tendance locale
+# Solène
 ```
 
 ## Conclusion
