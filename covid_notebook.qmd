@@ -85,6 +85,12 @@ Au cas où, pour les futures analyses, les différentes séries ont également �
 
 ```{r ts_residential}
 # Lucie sur la VAR = residential
+# La série temporelle est créée (début le 15 février 2020 = 46e jour de l'année 2020) selon la variable residential
+mobw_ts <- ts(mobw$residential, start = c(2020, 46), frequency = 365)
+plot(mobw_ts)
+# Aggrégation par moyenne des valeurs par semaine
+mobw_ts2 <- aggregate(mobw_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(mobw_ts2, ylab = "Pourcentage de déplacement vers les parcs")
 ```
 
 ```{r ts_workplaces}
