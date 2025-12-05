@@ -89,6 +89,7 @@ plot(retail_recreation_ts, ylab = "Pourcentage de déplacement vers les magasins
 
 ```
 Pour la première série choisie, nous prenons la variable retail_recreation. Cela correspond au taux de déplacement depuis la norme (0). Si la valeur est négative, il y a moins de déplacement vers les magasins de détail et loisirs. Si la valeur est positives, la population a eu tendance à davantage se déplacer vers ceux-ci. 
+Ensuite, nous procédons à l'analyse de la série (dans ce même chunk pour un gain de place au sein du notebook, il se peut que ce soit mis différemment au niveau du report).
 
 ```{r ts_residential}
 # Lucie sur la VAR = residential
