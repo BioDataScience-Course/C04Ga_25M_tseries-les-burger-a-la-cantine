@@ -74,6 +74,8 @@ plot(mobw_ts)
 # Aggrégation par moyenne des valeurs par semaine
 mobw_ts2 <- aggregate(mobw_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
 plot(mobw_ts2)
+
+#code que j'ai fait - Anaïs
 covid_ts <- ts(covid, start = c(2020, 2, 15), end = c(2022, 10, 15), frequency = 365)
 class(covid_ts)
 plot(covid_ts)
