@@ -110,6 +110,11 @@ plot(mobw_ts)
 workplaces_ts2 <- aggregate(workplaces_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
 plot(workplaces_ts2, ylab = "Pourcentage de déplacement vers les lieux de travails")
 ```
+
+Pour workplace_ts, la ligne est très dentelée et irrégulière. Elle chute brutalement de 0 à -80 au début de 2020, puis remonte progressivement avec beaucoup de zigzags. Vers mi 2020, elle atteint des valeurs autour de 0 à +20. Elle redescend ensuite vers -40/-60 fin 2020 début 2021. Pour le reste de la période, la ligne oscille fortement entre -20 et +40 avec un aspect très chaotique et hérissé. En fin de période, les valeurs se situent entre +10 et +20.
+
+Pour workplaces_ts2, la ligne est beaucoup plus lisse. Elle descend rapidement à -70 début 2020, puis forme un motif en "W" durant 2020. En 2021, elle oscille en vagues régulières entre -60 et -20. Durant 2022, elle continue ses ondulations mais remonte progressivement. En fin de période, elle approche de 0. L'ensemble est fluide et permet de voir clairement les tendances générales.
+
 ## Conclusion
 
 <!--% Lorsque toutes les analyses sont réalisées, terminez ce bloc-notes avec 3 à 6 phrases de conclusion en rapport avec ce que vous avez observé dans vos analyses. Quels sont les éléments les plus pertinents que vous retenez ? -->
