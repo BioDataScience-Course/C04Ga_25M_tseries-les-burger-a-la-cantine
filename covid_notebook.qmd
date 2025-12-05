@@ -87,6 +87,7 @@ Au cas où, pour les futures analyses, les différentes séries ont également �
 ```{r statistiques glissantes}
 # statistiques glissantes
 # Lucie
+stat.slide()
 ```
 
 ```{r autocorrélation}
