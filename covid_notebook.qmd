@@ -76,16 +76,18 @@ mobw[mobw$weekdays == "Saturday" | mobw$weekdays == "Sunday" , 2:7] <- NA
 Pour chaque variable, une série chronologique est créée. Au 0, c'est la valeur de départ, le déplacement "classique", normal, pas de déplacement supplémentaire ou moins de déplacement pour la raison de la variable. Quand la valeur est négative, le taux de déplacement est moindre comparé aux années d'avant "normales". Quand elle est positive, le déplacement est supérieur par rapport aux années d'avant.
 Pour l'axe du temps, lorsque le temps s'affiche, par exemple, "2020.5", cela signifie que nous sommes à la moitié de l'année.
 Au cas où, pour les futures analyses, les différentes séries ont également été scindées (au lieu d'avoir un seul objet mts avec toutes les séries comprises, il y aura différents objets de classe ts)
+L'analyse est scindée, entre les weekends et les jours de la semaine.
 
 ```{r parks}
 # La série temporelle est créée (début le 15 février 2020 = 46e jour de l'année 2020)
-mobw_ts <- ts(mobw$parks, start = c(2020, 46), frequency = 365)
+mobw_ts <- ts(mobw$retail_recreation, start = c(2020, 46), frequency = 365)
 plot(mobw_ts)
 # Aggrégation par moyenne des valeurs par semaine
-parks_ts <- aggregate(mobw_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(parks_ts, ylab = "Pourcentage de déplacement vers les parcs", xlab = "Temps")
+retail_recreation_ts <- aggregate(mobw_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(retail_recreation_ts, ylab = "Pourcentage de déplacement vers les magasins de détail et loisirs", xlab = "Temps")
 
 ```
+Pour la première série choisie, nous prenons la variable retail_recreation. Cela correspond au taux de déplacement depuis la norme (0). Si la valeur est négative, il y a moins de déplacement vers les magasins de détail et loisirs. Si la valeur est positives, la population a eu tendance à davantage se déplacer vers ceux-ci. 
 
 ```{r ts_residential}
 # Lucie sur la VAR = residential
