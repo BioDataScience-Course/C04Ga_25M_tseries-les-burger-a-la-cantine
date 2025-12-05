@@ -65,6 +65,19 @@ Notre jeu de données que nous nommons "covid" possède 974 observations pour 7 
 covid_ts <- ts(covid, start = c(2020, 2, 15), end = c(2022, 10, 15), frequency = 365)
 class(covid_ts)
 plot(covid_ts)
+
+retail_recreation_ts <- ts(covid$retail_recreation, start = c(2020, 2, 15), end = c(2022, 10, 15), frequency = 365)
+plot(retail_recreation_ts)
+grocery_pharmacy_ts <- ts(covid$grocery_pharmacy, start = c(2020, 2, 15), end = c(2022, 10, 15), frequency = 365)
+plot(grocery_pharmacy_ts)
+parks_ts <- ts(covid$parks, start = c(2020, 2, 15), end = c(2022, 10, 15), frequency = 365)
+plot(parks_ts)
+transit_ts <- ts(covid$transit, start = c(2020, 2, 15), end = c(2022, 10, 15), frequency = 365)
+plot(transit_ts)
+workplaces_ts <- ts(covid$workplaces, start = c(2020, 2, 15), end = c(2022, 10, 15), frequency = 365)
+plot(workplaces_ts)
+residential_ts <- ts(covid$residential, start = c(2020, 2, 15), end = c(2022, 10, 15), frequency = 365)
+plot(residential_ts)
 ```
 Pour chaque variable, une série chronologique est créée. Au 0, c'est la valeur de départ, le déplacement "classique", normal, pas de déplacement supplémentaire ou moins de déplacement pour la raison de la variable. Quand la valeur est négative, le taux de déplacement est moindre comparé aux années d'avant "normales". Quand elle est positive, le déplacement est supérieur par rapport aux années d'avant.
 Pour l'axe du temps, lorsque le temps s'affiche, par exemple, "2020.5", cela signifie que nous sommes à la moitié de l'année.
