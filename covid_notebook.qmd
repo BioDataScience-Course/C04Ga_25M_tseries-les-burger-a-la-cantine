@@ -87,7 +87,8 @@ Au cas où, pour les futures analyses, les différentes séries ont également �
 ```{r statistiques glissantes}
 # statistiques glissantes
 # Lucie
-stat.slide()
+stat.slide(time(retail_recreation_ts), retail_recreation_ts, xmin = 2020, deltat = 1/12)->r_r_ts #en fonction du mois
+plot(r_r_ts)
 ```
 
 ```{r autocorrélation}
