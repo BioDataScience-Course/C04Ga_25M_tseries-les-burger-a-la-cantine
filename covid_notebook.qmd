@@ -99,6 +99,24 @@ Au cas où, pour les futures analyses, les différentes séries ont également �
 ```{r statistiques glissantes}
 # statistiques glissantes
 # Lucie
+# retail_recreation_ts en fonction du mois
+stat.slide(time(retail_recreation_ts), retail_recreation_ts, xmin = 2020, deltat = 1/12)->r_r_ts 
+plot(r_r_ts)
+# grocery_pharmacy_ts en fonction du mois
+stat.slide(time(grocery_pharmacy_ts), grocery_pharmacy_ts, xmin = 2020, deltat = 1/12)->g_p_ts
+plot(g_p_ts)
+# parks_ts en fonction du mois 
+stat.slide(time(parks_ts), parks_ts, xmin = 2020, deltat = 1/12)->p_ts
+plot(p_ts)
+# transit_ts en fonction du mois
+stat.slide(time(transit_ts), transit_ts, xmin = 2020, deltat = 1/12)->t_ts
+plot(t_ts)
+# workplaces_ts en fonction du mois
+stat.slide(time(workplaces_ts), workplaces_ts, xmin = 2020, deltat = 1/12)->w_ts
+plot(w_ts)
+# residential_ts en fonction du mois
+stat.slide(time(residential_ts), residential_ts, xmin = 2020, deltat = 1/12)->r_ts
+plot(r_ts)
 ```
 
 ```{r autocorrélation}
