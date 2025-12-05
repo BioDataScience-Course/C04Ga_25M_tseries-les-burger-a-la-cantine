@@ -106,7 +106,7 @@ workplaces_ts <- ts(mobw$workplaces, start = c(2020, 46), frequency = 365)
 plot(mobw_ts)
 # Aggrégation par moyenne des valeurs par semaine
 workplaces_ts2 <- aggregate(mobw_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(mobw_ts2, ylab = "Pourcentage de déplacement vers les lieux de travails")
+plot(workplaces_ts2, ylab = "Pourcentage de déplacement vers les lieux de travails")
 ```
 ## Conclusion
 
