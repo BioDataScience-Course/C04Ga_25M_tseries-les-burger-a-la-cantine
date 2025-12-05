@@ -79,6 +79,7 @@ Au cas où, pour les futures analyses, les différentes séries ont également �
 L'analyse est scindée, entre les weekends et les jours de la semaine.
 
 ```{r parks}
+#Anaïs sur l'analyse des déplacements vers les magasins de détail et loisirs
 # La série temporelle est créée (début le 15 février 2020 = 46e jour de l'année 2020)
 mobw_ts <- ts(mobw$retail_recreation, start = c(2020, 46), frequency = 365)
 plot(mobw_ts)
