@@ -83,50 +83,13 @@ Pour chaque variable, une série chronologique est créée. Au 0, c'est la valeu
 Pour l'axe du temps, lorsque le temps s'affiche, par exemple, "2020.5", cela signifie que nous sommes à la moitié de l'année.
 Au cas où, pour les futures analyses, les différentes séries ont également été scindées (au lieu d'avoir un seul objet mts avec toutes les séries comprises, il y aura différents objets de classe ts)
 
-
-```{r statistiques glissantes}
-# statistiques glissantes
-# Lucie
-# retail_recreation_ts en fonction du mois
-stat.slide(time(retail_recreation_ts), retail_recreation_ts, xmin = 2020, deltat = 1/12)->r_r_ts 
-plot(r_r_ts)
-# grocery_pharmacy_ts en fonction du mois
-stat.slide(time(grocery_pharmacy_ts), grocery_pharmacy_ts, xmin = 2020, deltat = 1/12)->g_p_ts
-plot(g_p_ts)
-# parks_ts en fonction du mois 
-stat.slide(time(parks_ts), parks_ts, xmin = 2020, deltat = 1/12)->p_ts
-plot(p_ts)
-# transit_ts en fonction du mois
-stat.slide(time(transit_ts), transit_ts, xmin = 2020, deltat = 1/12)->t_ts
-plot(t_ts)
-# workplaces_ts en fonction du mois
-stat.slide(time(workplaces_ts), workplaces_ts, xmin = 2020, deltat = 1/12)->w_ts
-plot(w_ts)
-# residential_ts en fonction du mois
-stat.slide(time(residential_ts), residential_ts, xmin = 2020, deltat = 1/12)->r_ts
-plot(r_ts)
+```{r ts_var1}
+# Lucie sur la VAR = 
 ```
 
-```{r autocorrélation}
-# Autocorrélation
-# Solène
+```{r ts_var2}
+# Solène sur la VAR = 
 ```
-
-```{r tendance générale}
-# tendance générale avec bootstrap
-# Anaïs
-```
-
-```{r analyse spectrale}
-# analyse spectrale
-# Lucie
-```
-
-```{r tendance locale}
-# tendance locale
-# Solène
-```
-
 ## Conclusion
 
 <!--% Lorsque toutes les analyses sont réalisées, terminez ce bloc-notes avec 3 à 6 phrases de conclusion en rapport avec ce que vous avez observé dans vos analyses. Quels sont les éléments les plus pertinents que vous retenez ? -->
