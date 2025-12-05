@@ -99,10 +99,10 @@ plot(residential_ts1, ylab = "Pourcentage de déplacement vers les lieux de rés
 
 ```{r ts_workplaces}
 # Solène sur la VAR = workplaces
-mobw_ts <- ts(mobw$workplaces, start = c(2020, 46), frequency = 365)
+workplaces_ts <- ts(mobw$workplaces, start = c(2020, 46), frequency = 365)
 plot(mobw_ts)
 # Aggrégation par moyenne des valeurs par semaine
-mobw_ts2 <- aggregate(mobw_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
+workplaces_ts2 <- aggregate(mobw_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
 plot(mobw_ts2, ylab = "Pourcentage de déplacement vers les lieux de travails")
 ```
 ## Conclusion
