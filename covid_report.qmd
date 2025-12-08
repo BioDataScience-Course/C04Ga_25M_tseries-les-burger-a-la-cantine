@@ -16,10 +16,12 @@ lang: fr
 ## Introduction
 
 <!--% Rédigez l'introduction de ce rapport.-->
+En 2020, le SARS-COV-2 a provoqué une pandémie mondiale. Ce virus a causé une maladie entraînant des syndrome respiratoires aigus sévères. Au cours de cette pandémie, les autorités publiques ont instauré différents confinements ainsi que des restrictions sanitaires qui ont notamment influencé la mobilité de la population belge. Des données sur la mobilité en Belgique ont été recensées à partir de février 2020 et jusqu'en octobre 2022. Le jeu de données correspondant contient les niveaux de fréquentations de différents lieux tels que les espaces de loisirs, les commerces de détails, les commerces d'alimentation, les pharmacies, les parcs et les lieux de travail.
 
 ## But
 
 <!--% Rédigez le but de ce rapport.-->
+L'objectif de nos analyses est de mettre en évidence les variations de fréquentation des différents lieux mentionnés dans l'introduction. Notre analyse se concentre sur les lieux de travail, x et Y. 
 
 ## Matériel et méthodes
 
