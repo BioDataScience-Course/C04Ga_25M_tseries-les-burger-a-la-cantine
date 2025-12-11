@@ -117,6 +117,85 @@ Pour workplace_ts, la ligne est très dentelée et irrégulière. Elle chute bru
 
 Pour workplaces_ts2, la ligne est beaucoup plus lisse. Elle descend rapidement à -70 début 2020, puis forme un motif en "W" durant 2020. En 2021, elle oscille en vagues régulières entre -60 et -20. Durant 2022, elle continue ses ondulations mais remonte progressivement. En fin de période, elle approche de 0. L'ensemble est fluide et permet de voir clairement les tendances générales.
 
+```{r worplace_analysis}
+#Analyse de la fréquentation des lieux de travail
+# L'objet workplaces_ts existe déjà, mais on le recrée ici pour clarté
+
+workplaces_ts <- ts(mobw$workplaces, start = c(2020, 46), frequency = 365)
+
+# Décomposition de la série: période comprenant les 2 confinements (du 18 mars 2020 au 9 juin 2021)
+
+conf <- window(workplaces_ts, start = c(2020, 78), end = c(2021, 160))
+
+# Décomposition de la série: période après les 2 confinements (du 9 juin 2021 à la fin de 2022)
+
+after <- window(workplaces_ts, start = c(2021, 160), end = c(2022, 288))
+
+# Agrégation dans le but de supprimer les NA, pour le jeu de données conf
+
+conf_agr <- aggregate(conf, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(conf_agr, xlab = "Temps", ylab = "Variation dans la présence au travail (%)", main = "Période de confinement: Jours de la semaine agrégés")
+abline(h = 0, col = "red", lty = 2)
+
+acf(conf_agr, main = "ACF de la série ST confinement")
+
+# Agrégation dans le but de supprimer les NA, pour le jeu de données after
+
+after_agr <- aggregate(after, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(after_agr, xlab = "Temps", ylab = "Variation dans la présence au travail (%)", main = "Période post confinement: Jours de la semaine agrégés")
+abline(h = 0, col = "red", lty = 2)
+
+acf(after_agr, main = "ACF de la série ST post confinement")
+
+# Tendance générale confinement
+set.seed(21)
+tt_conf <- trend.test(conf_agr, R = 999)
+plot(tt_conf, main = "Tendance générale de la série ST confinement")
+
+# Tendance locale confinement
+lt_conf <- local.trend(conf_agr)
+plot(lt_conf, main = "Tendances locales - Période de confinement")
+
+# Tendance générale post confinement
+set.seed(210)
+tt_after <- trend.test(after_agr, R = 999)
+plot(tt_after, main = "Tendance générale de la série ST Post confinement")
+
+# Tendance locale post confinement
+lt_after <- local.trend(after_agr)
+plot(lt_after, main = "Tendances locales - Période post-confinement")
+
+# Décomposition: période de confinement 1, période entre les deux confinements, et la deuxième période de confinement
+
+conf1 <- window(workplaces_ts, start = c(2020, 78), end = c(2020, 167))
+data.after <- window(workplaces_ts, start = c(2020, 167), end = c(2020, 307))
+conf2 <- window(workplaces_ts, start = c(2020, 307), end = c(2021, 160))
+
+conf1_agr <- aggregate(conf1, 52, FUN = collapse::fmean, ts.eps = 1/52)
+data_after_agr <- aggregate(data.after, 52, FUN = collapse::fmean, ts.eps = 1/52)
+conf2_agr <- aggregate(conf2, 52, FUN = collapse::fmean, ts.eps = 1/52)
+
+plot(conf1_agr, xlab = "Temps", ylab = "Variation dans la présence au travail (%)", main = "Premier confinement")
+abline(h = 0, col = "red", lty = 2)
+
+plot(data_after_agr, xlab = "Temps", ylab = "Variation dans la présence au travail (%)", main = "Période pause entre les deux confinements")
+abline(h = 0, col = "red", lty = 2)
+
+plot(conf2_agr, xlab = "Temps", ylab = "Variation dans la présence au travail (%)", main = "Deuxième confinement")
+abline(h = 0, col = "red", lty = 2)
+
+```
+
+Durant la période englobant les deux confinements, l'ensemble des graphiques (séries agrégées, ACF, tests de tendance et sous-périodes) révèle une diminution drastique de la fréquentation des lieux de travail avec une chute brutale atteignant -70% lors du premier confinement (mars-juin 2020), témoignant de l'obligation généralisée du télétravail.
+
+Entre les deux confinements (juin-novembre 2020), bien qu'une récupération partielle soit observable avec des valeurs autour de -30%, la fréquentation reste systématiquement inférieure aux niveaux pré-COVID et à aucun moment la population n'a retrouvé une fréquentation équivalente à celle d'avant la pandémie.
+
+Le deuxième confinement (novembre 2020-juin 2021) montre un impact moins sévère (-25 à -40%) avec des fluctuations importantes, et la tendance locale révèle une amélioration progressive suggérant une adaptation des entreprises avec la mise en place de protocoles sanitaires permettant un retour partiel au travail en présentiel.
+
+Pour la période post-confinement (juin 2021-octobre 2022), les graphiques présentent des oscillations marquées entre -50% et +20%, avec une fréquentation restant très variable jusqu'à fin 2021 (autour de -40%) puis s'améliorant progressivement en 2022. Ces variations témoignent d'un changement structurel où le télétravail s'est normalisé et est devenu un choix organisationnel même après la levée des obligations sanitaires, les pics positifs en 2022 suggérant des périodes de "rattrapage" ou de retour au bureau encouragé par certaines entreprises.
+
+Les tests acf montrent que la majorité des pics se situent à l'intérieur de l'enveloppe de confiance indiquant des autocorrélations non-significatives, et nous ne détectons pas de cycle saisonnier, ce qui est cohérent puisque la fréquentation des lieux de travail dépend des décisions politiques concernant les restrictions sanitaires plutôt que de patterns saisonniers prévisibles. Les tests de tendance confirment une amélioration significative durant la période de confinement avec une tendance positive, tandis que la période post-confinement montre une forte variabilité sans direction claire reflétant l'hétérogénéité des politiques d'entreprises concernant le travail hybride.
+
 ## Conclusion
 
 <!--% Lorsque toutes les analyses sont réalisées, terminez ce bloc-notes avec 3 à 6 phrases de conclusion en rapport avec ce que vous avez observé dans vos analyses. Quels sont les éléments les plus pertinents que vous retenez ? -->
