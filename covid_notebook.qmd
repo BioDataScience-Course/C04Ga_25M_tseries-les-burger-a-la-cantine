@@ -97,10 +97,45 @@ Ensuite, nous procédons à l'analyse de la série (dans ce même chunk pour un 
 # Lucie sur la VAR = residential
 # La série temporelle est créée (début le 15 février 2020 = 46e jour de l'année 2020) selon la variable residential
 residential_ts <- ts(mobw$residential, start = c(2020, 46), frequency = 365)
-plot(residential_ts)
+plot(residential_ts,  ylab = "Pourcentage de déplacement vers les lieux de résidences", title = "Mobilité vers les lieux de résidences jour par jour")
 # Aggrégation par moyenne des valeurs par semaine
 residential_ts1 <- aggregate(residential_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(residential_ts1, ylab = "Pourcentage de déplacement vers les lieux de résidences")
+plot(residential_ts1, ylab = "Pourcentage de déplacement vers les lieux de résidences", title = "Mobilité vers les lieux de résidences semaine par semaine en omettant les weekends")
+```
+Le premier graphique montre la variable "residential" qui est donc le mobilité à partir du lieu de résidence. Cela nous permet donc de déduire le temps passé au domicile ou en extérieur. Tout d'abord, début 2020, on observe un grand bond en début de série (la mobilité résidentielle atteint des valeurs de 20 à 35) et cette date correspond au premier confinement. De mi à fin 2020, après le premier pic, les valeurs redescendent vers 10-15 mais restent tout de même élevées. On observe malgré tout quelques pics qui pourraient correspondre aux reconfinements d'automne 2020. Ensuite en 2021, la mobilité résidentielle décroit. Et pour terminer en 2022, on observe des valeurs plus basses avec quelques oscillations et pics sporadiques. 
+
+Le second graphique montre la variable 'residential" tout comme le premier graphique mais cette fois-ci, nous avons enlevé les weekends et fait une "moyenne" de la mobilité par semaine. Cela permet d'éliminer du bruit journalier et donc de donner une tendance plus nette grâce au retrait des weekends. Tout comme dans la série originale, un pic massif est observé au début de la série ce qui correspondrait au premier confinement. Mi mai 2020, le pic massif redescend ceci est du au déconfinement. De la fin de 2020 à 2021, on observe des cycles réguliers et une baisse. Les oscillations ont peut être été causé par des reconfinements et des couvre feu, télétravail... Pour terminer, en 2022, les valeurs commence à redescendre avec des pics moins élevés. 
+
+Etant donné que le second graphique a moins de bruit journalier, nous allons utilisé celui là pour les différentes analyses que nous allons faire sur notre analyse.
+
+```{r wresidential_analysis}
+# Décomposition de la série: période comprenant les 2 confinements (du 18 mars 2020 au 9 juin 2021) + graphique + autocorrélation + tendance générale + tendance locale
+avant <- window(residential_ts1, start = c(2020, 78), end = c(2021, 160))
+plot(avant, xlab = "Temps", ylab = "Variation dans la présence au travail (%)", main = "Période de confinement: Jours de la semaine agrégés")
+abline(h = 0, col = "red", lty = 2)
+
+acf(avant, main = "ACF de la série ST confinement")
+
+set.seed(123)
+avant_tg <- trend.test(avant, R = 999)
+plot(avant_tg, main = "Tendance générale de la série ST confinement")
+
+avant_tl <- local.trend(avant)
+plot(avant_tl, main = "Tendances locales - Période de confinement")
+
+# Décomposition de la série: période après les 2 confinements (du 9 juin 2021 à la fin de 2022) + graphique + autocorrélation + tendance générale + tendance locale
+après <- window(residential_ts1, start = c(2021, 160), end = c(2022, 288))
+plot(après, xlab = "Temps", ylab = "Variation dans la présence au travail (%)", main = "Période post confinement: Jours de la semaine agrégés")
+abline(h = 0, col = "red", lty = 2)
+
+acf(après, main = "ACF de la série ST post confinement")
+
+set.seed(321)
+après_tg <- trend.test(après, R = 999)
+plot(après_tg, main = "Tendance générale de la série ST Post confinement")
+
+après_tl <- local.trend(après)
+plot(après_tl, main = "Tendances locales - Période post-confinement")
 ```
 
 ```{r ts_workplaces}
