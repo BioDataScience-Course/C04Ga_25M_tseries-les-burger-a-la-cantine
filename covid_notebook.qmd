@@ -83,19 +83,19 @@ L'analyse est scindée, entre les weekends et les jours de la semaine.
 ```{r retail and recreation}
 #Anaïs sur l'analyse des déplacements vers les magasins de détail et loisirs
 # La série temporelle est créée (début le 15 février 2020 = 46e jour de l'année 2020)
-mobw_ts <- ts(mobw$retail_recreation, start = c(2020, 46), frequency = 365)
-plot(mobw_ts)
+retail_recreation_ts <- ts(mobw$retail_recreation, start = c(2020, 46), frequency = 365)
+plot(retail_recreation_ts)
 # Aggrégation par moyenne des valeurs par semaine
-retail_recreation_ts <- aggregate(mobw_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(retail_recreation_ts, ylab = "Pourcentage de déplacement vers les magasins de détail et loisirs", xlab = "Temps")
+retail_recreation_ts2 <- aggregate(retail_recreation_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(retail_recreation_ts2, ylab = "Pourcentage de déplacement vers les magasins de détail et loisirs", xlab = "Temps")
 
 # Décomposition de la série: période comprenant les 2 confinements (du 18 mars 2020 au 9 juin 2021)
 
-conf_rr <- window(retail_recreation_ts, start = c(2020, 78), end = c(2021, 160))
+conf_rr <- window(retail_recreation_ts, start = c(2020, 77), end = c(2021, 160))
 
-# Décomposition de la série: période après les 2 confinements (du 9 juin 2021 à la fin de 2022)
+# Décomposition de la série: période après les 2 confinements (du 10 juin 2021 à la fin de 2022)
 
-after_rr <- window(retail_recreation_ts, start = c(2021, 160), end = c(2022, 288))
+after_rr <- window(retail_recreation_ts, start = c(2021, 161), end = c(2022, 365))
 
 # Agrégation dans le but de supprimer les NA, pour le jeu de données conf
 
@@ -133,9 +133,9 @@ plot(after_rr_local, main = "Tendances locales - Période post-confinement")
 
 # Décomposition: période de confinement 1, période entre les deux confinements, et la deuxième période de confinement
 
-conf1_rr <- window(retail_recreation_ts, start = c(2020, 78), end = c(2020, 167))
-data.after_rr <- window(retail_recreation_ts, start = c(2020, 167), end = c(2020, 307))
-conf2_rr <- window(retail_recreation_ts, start = c(2020, 307), end = c(2021, 160))
+conf1_rr <- window(retail_recreation_ts, start = c(2020, 77), end = c(2020, 167))
+data.after_rr <- window(retail_recreation_ts, start = c(2020, 167), end = c(2020, 306))
+conf2_rr <- window(retail_recreation_ts, start = c(2020, 306), end = c(2021, 160))
 
 conf1_rr_agr <- aggregate(conf1_rr, 52, FUN = collapse::fmean, ts.eps = 1/52)
 data_after_agr_rr <- aggregate(data.after_rr, 52, FUN = collapse::fmean, ts.eps = 1/52)
