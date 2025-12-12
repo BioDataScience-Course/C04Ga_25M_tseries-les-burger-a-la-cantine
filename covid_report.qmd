@@ -42,6 +42,9 @@ if (!"tools:tests" %in% search())
   source(here::here("tests/tools_tests.R"), attach(NULL, name = "tools:tests"))
 # Configuration de l'environnement
 SciViews::R("ts")
+```
+
+```{r importation}
 # Importation des données et descriptions de celles-ci avec représentation graphique
 # Anaïs
 covid <- read("data/mobility_wallonia.rds")
