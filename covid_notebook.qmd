@@ -89,6 +89,67 @@ plot(mobw_ts)
 retail_recreation_ts <- aggregate(mobw_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
 plot(retail_recreation_ts, ylab = "Pourcentage de déplacement vers les magasins de détail et loisirs", xlab = "Temps")
 
+# Décomposition de la série: période comprenant les 2 confinements (du 18 mars 2020 au 9 juin 2021)
+
+conf_rr <- window(retail_recreation_ts, start = c(2020, 78), end = c(2021, 160))
+
+# Décomposition de la série: période après les 2 confinements (du 9 juin 2021 à la fin de 2022)
+
+after_rr <- window(retail_recreation_ts, start = c(2021, 160), end = c(2022, 288))
+
+# Agrégation dans le but de supprimer les NA, pour le jeu de données conf
+
+conf_aggregate <- aggregate(conf_rr, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(conf_aggregate, xlab = "Temps", ylab = "Variation dans les déplacements vers les magasins de détails et de loisir (%)", main = "Période de confinement: Jours de la semaine agrégés")
+abline(h = 0, col = "red", lty = 2)
+
+acf(conf_aggregate, main = "ACF de la série ST confinement")
+
+# Agrégation dans le but de supprimer les NA, pour le jeu de données after
+
+after_aggregate <- aggregate(after_rr, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(after_aggregate, xlab = "Temps", ylab = "Variation dans les déplacements vers les magasins de détails et de loisir (%)", main = "Période post confinement: Jours de la semaine agrégés")
+abline(h = 0, col = "red", lty = 2)
+
+acf(after_aggregate, main = "ACF de la série ST post confinement")
+
+# Tendance générale confinement
+set.seed(456)
+conf_rr_trend <- trend.test(conf_aggregate, R = 999)
+plot(conf_rr_trend, main = "Tendance générale de la série ST confinement")
+
+# Tendance locale confinement
+conf_rr_local <- local.trend(conf_aggregate)
+plot(conf_rr_local, main = "Tendances locales - Période de confinement")
+
+# Tendance générale post confinement
+set.seed(897)
+after_rr_trend <- trend.test(after_aggregate, R = 999)
+plot(after_rr_trend, main = "Tendance générale de la série ST Post confinement")
+
+# Tendance locale post confinement
+after_rr_local <- local.trend(after_aggregate)
+plot(after_rr_local, main = "Tendances locales - Période post-confinement")
+
+# Décomposition: période de confinement 1, période entre les deux confinements, et la deuxième période de confinement
+
+conf1_rr <- window(retail_recreation_ts, start = c(2020, 78), end = c(2020, 167))
+data.after_rr <- window(retail_recreation_ts, start = c(2020, 167), end = c(2020, 307))
+conf2_rr <- window(retail_recreation_ts, start = c(2020, 307), end = c(2021, 160))
+
+conf1_rr_agr <- aggregate(conf1_rr, 52, FUN = collapse::fmean, ts.eps = 1/52)
+data_after_agr_rr <- aggregate(data.after_rr, 52, FUN = collapse::fmean, ts.eps = 1/52)
+conf2_rr_agr <- aggregate(conf2_rr, 52, FUN = collapse::fmean, ts.eps = 1/52)
+
+plot(conf1_rr_agr, xlab = "Temps", ylab = "Variation dans les déplacements vers les magasins de détails et de loisir (%)", main = "Premier confinement")
+abline(h = 0, col = "red", lty = 2)
+
+plot(data_after_agr_rr, xlab = "Temps", ylab = "les déplacements vers les magasins de détails et de loisir (%)", main = "Période pause entre les deux confinements")
+abline(h = 0, col = "red", lty = 2)
+
+plot(conf2_rr_agr, xlab = "Temps", ylab = "les déplacements vers les magasins de détails et de loisir (%)", main = "Deuxième confinement")
+abline(h = 0, col = "red", lty = 2)
+
 ```
 Pour la première série choisie, nous prenons la variable retail_recreation. Cela correspond au taux de déplacement depuis la norme (0). Si la valeur est négative, il y a moins de déplacement vers les magasins de détail et loisirs. Si la valeur est positives, la population a eu tendance à davantage se déplacer vers ceux-ci. 
 Ensuite, nous procédons à l'analyse de la série (dans ce même chunk pour un gain de place au sein du notebook, il se peut que ce soit mis différemment au niveau du report).
