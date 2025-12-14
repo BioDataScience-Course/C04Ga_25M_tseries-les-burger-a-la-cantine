@@ -173,18 +173,37 @@ Nous avons également séparé les différents confinements pour montrer ce que 
 ```{r ts_residential}
 # Lucie sur la VAR = residential
 # La série temporelle est créée (début le 15 février 2020 = 46e jour de l'année 2020) selon la variable residential
-residential_ts <- ts(mobw$residential, start = c(2020, 46), frequency = 365)
-plot(residential_ts,  ylab = "Pourcentage de déplacement vers les lieux de résidences", title = "Mobilité vers les lieux de résidences jour par jour")
+# Série "classique"
+residential_ts <- ts(covid$residential, start = c(2020, 46), frequency = 365)
+plot(residential_ts,  ylab = "Pourcentage de déplacement vers les lieux de résidences", main = "Mobilité vers les lieux de résidences jour par jour")
+
 # Aggrégation par moyenne des valeurs par semaine
+# Série avec une "moyenne sur la semaine"
 residential_ts1 <- aggregate(residential_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(residential_ts1, ylab = "Pourcentage de déplacement vers les lieux de résidences", title = "Mobilité vers les lieux de résidences semaine par semaine en omettant les weekends")
+plot(residential_ts1, ylab = "Pourcentage de déplacement vers les lieux de résidences", main = "Mobilité vers les lieux de résidences semaine par semaine")
+
+# La série avec une "moyenne sur la semaine sans compter les weekends"
+residential_ts2 <- aggregate(ts(mobw$residential, start = c(2020, 46), frequency = 365), 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(residential_ts2, ylab = "Pourcentage de déplacement vers les lieux de résidences", main = "Mobilité vers les lieux de résidences semaine par semaine en omettant les weekends")
+
+# La série avec une "moyenne sur uniquement les weekends"
+mobww <- covid
+mobww$weekdays <- weekdays(as.POSIXct(mobww$date))
+mobww[mobww$weekdays != "Saturday" & mobww$weekdays != "Sunday" , 2:7] <- NA  
+residential_ts3 <- aggregate(ts(mobww$residential, start = c(2020, 46), frequency = 365), 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(residential_ts3, ylab = "Pourcentage de déplacement vers les lieux de résidences", main = "Mobilité vers les lieux de résidences weekends par weekends")
+```
+Tout d'abord, différentes séries temporelles ont été crées pour la variable "residential". Le premier graphique montre tout le jeu de données au complet, ce qui est peu lisible. Ensuite, les données ont été "aggrégés", c'est à dire qu'une sorte de moyenne par semaine a été faite pour rendre le tout plus lisible. Toujours en gardant cette idée de synthèse, deux autres séries ont été crées. La première ne contient que les semaines sans les weekends donc du lundi au vendredi tandis que la seconde ne contient que les weekends. 
+
+Ces 4 graphiques montrent donc tous la même forme générale malgré leur traitement différent. La variable "residential" correspond à la mobilité à partir du lieu de résidence. Cette variable nous permet donc de déduire le temps passé au domicile ou en extérieur. Tout d'abord, début 2020, on observe un grand bond en début de série (la mobilité résidentielle atteint des valeurs de 20 à 35) et cette période correspond au premier confinement. De mi à fin 2020, après le premier pic, les valeurs redescendent vers 10-15 mais restent tout de même assez élevées. Certains pics sont malgré tout observés et pourraient correspondre aux reconfinements d'automne 2020. Ensuite en 2021, la mobilité résidentielle décroit. Et pour terminer, en 2022, on observe des valeurs plus basses avec quelques oscillations et pics sporadiques.
+
+Le rapport commencera par une analyse initiale avec l'aide de la série jour pour jour et une autre série sera ensuite choisie pour une analyse plus poussée. 
+```{r ts_residential_analysis_initial}
+# Lucie
+
 ```
 
-Le premier graphique montre la variable "residential" qui est donc le mobilité à partir du lieu de résidence. Cela nous permet donc de déduire le temps passé au domicile ou en extérieur. Tout d'abord, début 2020, on observe un grand bond en début de série (la mobilité résidentielle atteint des valeurs de 20 à 35) et cette date correspond au premier confinement. De mi à fin 2020, après le premier pic, les valeurs redescendent vers 10-15 mais restent tout de même élevées. On observe malgré tout quelques pics qui pourraient correspondre aux reconfinements d'automne 2020. Ensuite en 2021, la mobilité résidentielle décroit. Et pour terminer en 2022, on observe des valeurs plus basses avec quelques oscillations et pics sporadiques.
-
-Le second graphique montre la variable 'residential" tout comme le premier graphique mais cette fois-ci, nous avons enlevé les weekends et fait une "moyenne" de la mobilité par semaine. Cela permet d'éliminer du bruit journalier et donc de donner une tendance plus nette grâce au retrait des weekends. Tout comme dans la série originale, un pic massif est observé au début de la série ce qui correspondrait au premier confinement. Mi mai 2020, le pic massif redescend ceci est du au déconfinement. De la fin de 2020 à 2021, on observe des cycles réguliers et une baisse. Les oscillations ont peut être été causé par des reconfinements et des couvre feu, télétravail... Pour terminer, en 2022, les valeurs commence à redescendre avec des pics moins élevés.
-
-Etant donné que le second graphique a moins de bruit journalier, nous allons utilisé celui là pour les différentes analyses que nous allons faire sur notre analyse.
+Pour continuer l'analyse de façon plus précise, il faut choisir une seule série cohérente. La série jour par jour va être d'office éliminée car elle contient énormément de bruit journalier ce qui la rend moins lisible et pourrait causer des problèmes au niveau de l'autocorrélation. De plus, cette série a été analysée comme série initiale. Il peut être intéressant de prendre les deux série semaine par semaine (avec et sans les weekends) pour voir s'il y a ou non une différence entre les deux. On pourrait s'attendre à peu de différence car le covid a principalement influencé le travail en semaine comparée aux loisirs en weekends. 
 
 ```{r wresidential_analysis}
 # Décomposition de la série: période comprenant les 2 confinements (du 18 mars 2020 au 9 juin 2021) + graphique + autocorrélation + tendance générale + tendance locale
@@ -215,6 +234,7 @@ plot(après_tg, main = "Tendance générale de la série ST Post confinement")
 après_tl <- local.trend(après)
 plot(après_tl, main = "Tendances locales - Période post-confinement")
 ```
+balablab
 
 ```{r ts_workplaces}
 # Solène sur la VAR = workplaces
