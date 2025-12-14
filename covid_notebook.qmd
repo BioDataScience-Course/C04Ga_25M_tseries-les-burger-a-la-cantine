@@ -175,37 +175,56 @@ Nous avons également séparé les différents confinements pour montrer ce que 
 # La série temporelle est créée (début le 15 février 2020 = 46e jour de l'année 2020) selon la variable residential
 # Série "classique"
 residential_ts <- ts(covid$residential, start = c(2020, 46), frequency = 365)
-plot(residential_ts,  ylab = "Pourcentage de déplacement vers les lieux de résidences", main = "Mobilité vers les lieux de résidences jour par jour")
+plot(residential_ts,  ylab = "Pourcentage de déplacement vers les lieux de résidences", xlab = "Temps", main = "Mobilité vers les lieux de résidences jour par jour")
 
 # Aggrégation par moyenne des valeurs par semaine
 # Série avec une "moyenne sur la semaine"
 residential_ts1 <- aggregate(residential_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(residential_ts1, ylab = "Pourcentage de déplacement vers les lieux de résidences", main = "Mobilité vers les lieux de résidences semaine par semaine")
+plot(residential_ts1, ylab = "Pourcentage de déplacement vers les lieux de résidences", xlab = "Temps", main = "Mobilité vers les lieux de résidences semaine par semaine")
 
 # La série avec une "moyenne sur la semaine sans compter les weekends"
 residential_ts2 <- aggregate(ts(mobw$residential, start = c(2020, 46), frequency = 365), 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(residential_ts2, ylab = "Pourcentage de déplacement vers les lieux de résidences", main = "Mobilité vers les lieux de résidences semaine par semaine en omettant les weekends")
+plot(residential_ts2, ylab = "Pourcentage de déplacement vers les lieux de résidences", xlab = "Temps", main = "Mobilité vers les lieux de résidences semaine par semaine en omettant les weekends")
 
 # La série avec une "moyenne sur uniquement les weekends"
 mobww <- covid
 mobww$weekdays <- weekdays(as.POSIXct(mobww$date))
 mobww[mobww$weekdays != "Saturday" & mobww$weekdays != "Sunday" , 2:7] <- NA  
 residential_ts3 <- aggregate(ts(mobww$residential, start = c(2020, 46), frequency = 365), 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(residential_ts3, ylab = "Pourcentage de déplacement vers les lieux de résidences", main = "Mobilité vers les lieux de résidences weekends par weekends")
+plot(residential_ts3, ylab = "Pourcentage de déplacement vers les lieux de résidences", xlab = "Temps", main = "Mobilité vers les lieux de résidences weekends par weekends")
 ```
 Tout d'abord, différentes séries temporelles ont été crées pour la variable "residential". Le premier graphique montre tout le jeu de données au complet, ce qui est peu lisible. Ensuite, les données ont été "aggrégés", c'est à dire qu'une sorte de moyenne par semaine a été faite pour rendre le tout plus lisible. Toujours en gardant cette idée de synthèse, deux autres séries ont été crées. La première ne contient que les semaines sans les weekends donc du lundi au vendredi tandis que la seconde ne contient que les weekends. 
 
 Ces 4 graphiques montrent donc tous la même forme générale malgré leur traitement différent. La variable "residential" correspond à la mobilité à partir du lieu de résidence. Cette variable nous permet donc de déduire le temps passé au domicile ou en extérieur. Tout d'abord, début 2020, on observe un grand bond en début de série (la mobilité résidentielle atteint des valeurs de 20 à 35) et cette période correspond au premier confinement. De mi à fin 2020, après le premier pic, les valeurs redescendent vers 10-15 mais restent tout de même assez élevées. Certains pics sont malgré tout observés et pourraient correspondre aux reconfinements d'automne 2020. Ensuite en 2021, la mobilité résidentielle décroit. Et pour terminer, en 2022, on observe des valeurs plus basses avec quelques oscillations et pics sporadiques.
 
-Le rapport commencera par une analyse initiale avec l'aide de la série jour pour jour et une autre série sera ensuite choisie pour une analyse plus poussée. 
+Le rapport commencera par une analyse initiale avec l'aide de la série jour pour jour et une autre série sera ensuite choisie pour une analyse plus poussée. Cette analyse initiale va nous permettre de comprendre les données avant de pouvoir les lisser. 
 ```{r ts_residential_analysis_initial}
 # Lucie
-
+acf(residential_ts)
+trend.test(residential_ts)
+plot(trend.test(residential_ts, R = 999))
+local.trend(residential_ts)
+# stationnariser avant avec tsd() et boxplot pq pas
+plot(extract(decdiff(residential_ts, lag = 6, order = 1), components = 1))
+spectrum(residential_ts, spans = c(3,7))
+cpgram(residential_ts)
+# stat slide ?? statistiques glissantes ???
 ```
+L'autocorrélation est forte et toutes les barres sont comprises à l'extérieur de l'intervalle de fonfiance à 95%. Cela indique donc une grande similiture entre la série initiale et la série décalée.
 
-Pour continuer l'analyse de façon plus précise, il faut choisir une seule série cohérente. La série jour par jour va être d'office éliminée car elle contient énormément de bruit journalier ce qui la rend moins lisible et pourrait causer des problèmes au niveau de l'autocorrélation. De plus, cette série a été analysée comme série initiale. Il peut être intéressant de prendre les deux série semaine par semaine (avec et sans les weekends) pour voir s'il y a ou non une différence entre les deux. On pourrait s'attendre à peu de différence car le covid a principalement influencé le travail en semaine comparée aux loisirs en weekends. 
+Le périodigramme lissé qui a été tracé montre 3 zones qui peuvent être considérées comme significatives. ???
+Cependant, le périodigramme cumulé ne montre pas de périodicité significative. ????
 
-```{r wresidential_analysis}
+L'hypothèse H0 du test de corrélation de Spearman (H0 = pas de tendance générale) peut être rejetée car la p-value inférieur au seuil alpha. La tendance générale est donc à la diminution car rho est négatif (-0,4741115).
+
+La tendance générale est significative à l'augmentation de la série. ????
+
+L'analyse de la tendance locale montre qu'au début 2020, il y a des valeurs très faibles qui vont ensuite monter jusqu'à mi 2020. La période de mi 2020 va rester assez stable avec quelques variations jusqu'en 2021. De 2021 à 2022, il y a eu un déclin progressif pour terminer par se stabiliser jusqu'à la fin de 2022.
+
+Pour continuer l'analyse de façon plus poussée, il faut choisir une seule série cohérente. La série jour par jour va être d'office éliminée car elle contient énormément de bruit journalier ce qui la rend moins lisible et pourrait causer des problèmes au niveau de l'autocorrélation. De plus, cette série a été analysée comme série initiale. Il peut être intéressant de prendre les deux série semaine par semaine (avec et sans les weekends) pour voir s'il y a ou non une différence entre les deux. On pourrait s'attendre à peu de différence car le covid a principalement influencé le travail en semaine comparée aux loisirs en weekends. 
+
+```{r residential_analysis_final}
+# Lucie
 # Décomposition de la série: période comprenant les 2 confinements (du 18 mars 2020 au 9 juin 2021) + graphique + autocorrélation + tendance générale + tendance locale
 avant <- window(residential_ts1, start = c(2020, 11), end = c(2021, 23))
 plot(avant, xlab = "Temps", ylab = "Variation dans la présence au travail (%)", main = "Période de confinement: Jours de la semaine agrégés")
