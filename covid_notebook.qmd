@@ -45,6 +45,7 @@ SciViews::R("ts")
 ```
 
 <!--% Ajoutez le nombre de chunks que vous souhaitez. Répartissez-vous le travail correctement. Structurez la section en partie avec des titres explicites de niveau trois.-->
+
 ```{r importation}
 # Importation des données et descriptions de celles-ci avec représentation graphique
 # Anaïs
@@ -59,6 +60,7 @@ covid <- srename(covid, retail_and_recreation_percent_change_from_baseline = ret
 #visualisation des données telles quelles
 skimr::skim(covid)
 ```
+
 Notre jeu de données que nous nommons "covid" possède 974 observations pour 7 variables. Nous avons 1 observation par jour, du 15 février 2020 au 15 octobre 2022. Nous allons représenter ces données sous forme de série chronologique.
 
 ```{r ts}
@@ -75,10 +77,8 @@ mobw[mobw$weekdays == "Saturday" | mobw$weekdays == "Sunday" , 2:7] <- NA
 
 
 ```
-Pour chaque variable, une série chronologique est créée. Au 0, c'est la valeur de départ, le déplacement "classique", normal, pas de déplacement supplémentaire ou moins de déplacement pour la raison de la variable. Quand la valeur est négative, le taux de déplacement est moindre comparé aux années d'avant "normales". Quand elle est positive, le déplacement est supérieur par rapport aux années d'avant.
-Pour l'axe du temps, lorsque le temps s'affiche, par exemple, "2020.5", cela signifie que nous sommes à la moitié de l'année.
-Au cas où, pour les futures analyses, les différentes séries ont également été scindées (au lieu d'avoir un seul objet mts avec toutes les séries comprises, il y aura différents objets de classe ts)
-L'analyse est scindée, entre les weekends et les jours de la semaine.
+
+Pour chaque variable, une série chronologique est créée. Au 0, c'est la valeur de départ, le déplacement "classique", normal, pas de déplacement supplémentaire ou moins de déplacement pour la raison de la variable. Quand la valeur est négative, le taux de déplacement est moindre comparé aux années d'avant "normales". Quand elle est positive, le déplacement est supérieur par rapport aux années d'avant. Pour l'axe du temps, lorsque le temps s'affiche, par exemple, "2020.5", cela signifie que nous sommes à la moitié de l'année. Au cas où, pour les futures analyses, les différentes séries ont également été scindées (au lieu d'avoir un seul objet mts avec toutes les séries comprises, il y aura différents objets de classe ts) L'analyse est scindée, entre les weekends et les jours de la semaine.
 
 ```{r retail and recreation}
 #Anaïs sur l'analyse des déplacements vers les magasins de détail et loisirs
@@ -151,13 +151,12 @@ plot(conf2_rr_agr, xlab = "Temps", ylab = "les déplacements vers les magasins d
 abline(h = 0, col = "red", lty = 2)
 
 ```
-Pour la première série choisie, nous prenons la variable retail_recreation. Cela correspond au taux de déplacement depuis la norme (0). Si la valeur est négative, il y a moins de déplacement vers les magasins de détail et loisirs. Si la valeur est positives, la population a eu tendance à davantage se déplacer vers ceux-ci. 
-Ensuite, nous procédons à l'analyse de la série (dans ce même chunk pour un gain de place au sein du notebook, il se peut que ce soit mis différemment au niveau du report).
-Tout d'abord, la série montre qu'en début 2020, la fréquentation était très faible. Après les 6 premiers mois, la fréquentation revient à la normale avant de chuter à nouveau. Après la 2e moitié de 2021, la fréquentation est revue à la hausse, dépassant même la fréquentation initiale.
+
+Pour la première série choisie, nous prenons la variable retail_recreation. Cela correspond au taux de déplacement depuis la norme (0). Si la valeur est négative, il y a moins de déplacement vers les magasins de détail et loisirs. Si la valeur est positives, la population a eu tendance à davantage se déplacer vers ceux-ci. Ensuite, nous procédons à l'analyse de la série (dans ce même chunk pour un gain de place au sein du notebook, il se peut que ce soit mis différemment au niveau du report). Tout d'abord, la série montre qu'en début 2020, la fréquentation était très faible. Après les 6 premiers mois, la fréquentation revient à la normale avant de chuter à nouveau. Après la 2e moitié de 2021, la fréquentation est revue à la hausse, dépassant même la fréquentation initiale.
 
 Un premier graphique montre également uniquement la période de confinement. Elle reste moindre que la fréquentation en temps normale (ligne rouge) mais elle possède cependant des variations. En fin de confinement, la fréquentation remonte.
 
-L'analyse ACF nous montre un graphique ressemblant à celui d'un cycle périodique. Les barres au début et à la fin sont significative car elles dépassent l'intervalle de confiance. 
+L'analyse ACF nous montre un graphique ressemblant à celui d'un cycle périodique. Les barres au début et à la fin sont significative car elles dépassent l'intervalle de confiance.
 
 Pour la période post-confinement, la fréquentation est largement supérieure à la normale, avec quelques variations, malgré une plus faible fréquentation début 2022.
 
@@ -169,7 +168,7 @@ La tendance générale et locale durant le confinement montre que la fréquentat
 
 Post confinement, les tendances générales et locales montrent une hausse de la fréquentation du milieu de 2021 jusque début 2022 avant de chuter fortement puis doucement revenir à la normale.
 
-Nous avons également séparé les différents confinements pour montrer ce que donnent plus précisément ces périodes en matière de fréquentation de magasins de détails et loisirs. 
+Nous avons également séparé les différents confinements pour montrer ce que donnent plus précisément ces périodes en matière de fréquentation de magasins de détails et loisirs.
 
 ```{r ts_residential}
 # Lucie sur la VAR = residential
@@ -180,15 +179,16 @@ plot(residential_ts,  ylab = "Pourcentage de déplacement vers les lieux de rés
 residential_ts1 <- aggregate(residential_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
 plot(residential_ts1, ylab = "Pourcentage de déplacement vers les lieux de résidences", title = "Mobilité vers les lieux de résidences semaine par semaine en omettant les weekends")
 ```
-Le premier graphique montre la variable "residential" qui est donc le mobilité à partir du lieu de résidence. Cela nous permet donc de déduire le temps passé au domicile ou en extérieur. Tout d'abord, début 2020, on observe un grand bond en début de série (la mobilité résidentielle atteint des valeurs de 20 à 35) et cette date correspond au premier confinement. De mi à fin 2020, après le premier pic, les valeurs redescendent vers 10-15 mais restent tout de même élevées. On observe malgré tout quelques pics qui pourraient correspondre aux reconfinements d'automne 2020. Ensuite en 2021, la mobilité résidentielle décroit. Et pour terminer en 2022, on observe des valeurs plus basses avec quelques oscillations et pics sporadiques. 
 
-Le second graphique montre la variable 'residential" tout comme le premier graphique mais cette fois-ci, nous avons enlevé les weekends et fait une "moyenne" de la mobilité par semaine. Cela permet d'éliminer du bruit journalier et donc de donner une tendance plus nette grâce au retrait des weekends. Tout comme dans la série originale, un pic massif est observé au début de la série ce qui correspondrait au premier confinement. Mi mai 2020, le pic massif redescend ceci est du au déconfinement. De la fin de 2020 à 2021, on observe des cycles réguliers et une baisse. Les oscillations ont peut être été causé par des reconfinements et des couvre feu, télétravail... Pour terminer, en 2022, les valeurs commence à redescendre avec des pics moins élevés. 
+Le premier graphique montre la variable "residential" qui est donc le mobilité à partir du lieu de résidence. Cela nous permet donc de déduire le temps passé au domicile ou en extérieur. Tout d'abord, début 2020, on observe un grand bond en début de série (la mobilité résidentielle atteint des valeurs de 20 à 35) et cette date correspond au premier confinement. De mi à fin 2020, après le premier pic, les valeurs redescendent vers 10-15 mais restent tout de même élevées. On observe malgré tout quelques pics qui pourraient correspondre aux reconfinements d'automne 2020. Ensuite en 2021, la mobilité résidentielle décroit. Et pour terminer en 2022, on observe des valeurs plus basses avec quelques oscillations et pics sporadiques.
+
+Le second graphique montre la variable 'residential" tout comme le premier graphique mais cette fois-ci, nous avons enlevé les weekends et fait une "moyenne" de la mobilité par semaine. Cela permet d'éliminer du bruit journalier et donc de donner une tendance plus nette grâce au retrait des weekends. Tout comme dans la série originale, un pic massif est observé au début de la série ce qui correspondrait au premier confinement. Mi mai 2020, le pic massif redescend ceci est du au déconfinement. De la fin de 2020 à 2021, on observe des cycles réguliers et une baisse. Les oscillations ont peut être été causé par des reconfinements et des couvre feu, télétravail... Pour terminer, en 2022, les valeurs commence à redescendre avec des pics moins élevés.
 
 Etant donné que le second graphique a moins de bruit journalier, nous allons utilisé celui là pour les différentes analyses que nous allons faire sur notre analyse.
 
 ```{r wresidential_analysis}
 # Décomposition de la série: période comprenant les 2 confinements (du 18 mars 2020 au 9 juin 2021) + graphique + autocorrélation + tendance générale + tendance locale
-avant <- window(residential_ts1, start = c(2020, 78), end = c(2021, 160))
+avant <- window(residential_ts1, start = c(2020, 11), end = c(2021, 23))
 plot(avant, xlab = "Temps", ylab = "Variation dans la présence au travail (%)", main = "Période de confinement: Jours de la semaine agrégés")
 abline(h = 0, col = "red", lty = 2)
 
@@ -202,7 +202,7 @@ avant_tl <- local.trend(avant)
 plot(avant_tl, main = "Tendances locales - Période de confinement")
 
 # Décomposition de la série: période après les 2 confinements (du 9 juin 2021 à la fin de 2022) + graphique + autocorrélation + tendance générale + tendance locale
-après <- window(residential_ts1, start = c(2021, 160), end = c(2022, 288))
+après <- window(residential_ts1, start = c(2021, 23), end = c(2022, 41))
 plot(après, xlab = "Temps", ylab = "Variation dans la présence au travail (%)", main = "Période post confinement: Jours de la semaine agrégés")
 abline(h = 0, col = "red", lty = 2)
 
@@ -313,8 +313,4 @@ Les tests acf montrent que la majorité des pics se situent à l'intérieur de l
 
 <!--% Lorsque toutes les analyses sont réalisées, terminez ce bloc-notes avec 3 à 6 phrases de conclusion en rapport avec ce que vous avez observé dans vos analyses. Quels sont les éléments les plus pertinents que vous retenez ? -->
 
-La pandémie a eu différents impacts selon les différents types de lieux fréquentés. 
-Pour les magasins de détail et de loisir, la fréquentation a dépassé les seuils d'avant la pandémie dès mi-2021, suggérant que les consommateurs ont eu une phase de rattrapage, vu qu'ils n'ont pas pu profiter de ce genre de services durant les confinements.
-à titre de comparaison, la fréquentation des lieux de travail n'est jamais revenue à la normale. Cela témoigne d'une transformation dans le monde professionnel.
-Les résidences ont été nettement plus fréquentées dû au confinement, ce qui est assez logique. Post-confinement, la fréquentation est restée supérieure à la normale, ce qui se corrèle bien avec la fréquentation des lieux de travail.
-Le 2e confinement a eu un impact nettement moins sévère que le premier.
+La pandémie a eu différents impacts selon les différents types de lieux fréquentés. Pour les magasins de détail et de loisir, la fréquentation a dépassé les seuils d'avant la pandémie dès mi-2021, suggérant que les consommateurs ont eu une phase de rattrapage, vu qu'ils n'ont pas pu profiter de ce genre de services durant les confinements. à titre de comparaison, la fréquentation des lieux de travail n'est jamais revenue à la normale. Cela témoigne d'une transformation dans le monde professionnel. Les résidences ont été nettement plus fréquentées dû au confinement, ce qui est assez logique. Post-confinement, la fréquentation est restée supérieure à la normale, ce qui se corrèle bien avec la fréquentation des lieux de travail. Le 2e confinement a eu un impact nettement moins sévère que le premier.
