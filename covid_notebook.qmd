@@ -87,7 +87,7 @@ retail_recreation_ts <- ts(mobw$retail_recreation, start = c(2020, 46), frequenc
 plot(retail_recreation_ts)
 # Aggrégation par moyenne des valeurs par semaine
 retail_recreation_ts2 <- aggregate(retail_recreation_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(retail_recreation_ts2, ylab = "Pourcentage de déplacement vers les magasins de détail et loisirs", xlab = "Temps")
+plot(retail_recreation_ts2, ylab = "Fréquentation des magasins de détail et loisirs", xlab = "Temps")
 
 # Décomposition de la série: période comprenant les 2 confinements (du 18 mars 2020 au 9 juin 2021)
 
@@ -100,7 +100,7 @@ after_rr <- window(retail_recreation_ts, start = c(2021, 161), end = c(2022, 365
 # Agrégation dans le but de supprimer les NA, pour le jeu de données conf
 
 conf_aggregate <- aggregate(conf_rr, 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(conf_aggregate, xlab = "Temps", ylab = "Variation dans les déplacements vers les magasins de détails et de loisir (%)", main = "Période de confinement: Jours de la semaine agrégés")
+plot(conf_aggregate, xlab = "Temps", ylab = "Fréquentation des magasins de détails et de loisir (%)", main = "Période de confinement: Jours de la semaine agrégés")
 abline(h = 0, col = "red", lty = 2)
 
 acf(conf_aggregate, main = "ACF de la série ST confinement")
@@ -108,7 +108,7 @@ acf(conf_aggregate, main = "ACF de la série ST confinement")
 # Agrégation dans le but de supprimer les NA, pour le jeu de données after
 
 after_aggregate <- aggregate(after_rr, 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(after_aggregate, xlab = "Temps", ylab = "Variation dans les déplacements vers les magasins de détails et de loisir (%)", main = "Période post confinement: Jours de la semaine agrégés")
+plot(after_aggregate, xlab = "Temps", ylab = "Fréquenatation des magasins de détails et de loisir (%)", main = "Période post confinement: Jours de la semaine agrégés")
 abline(h = 0, col = "red", lty = 2)
 
 acf(after_aggregate, main = "ACF de la série ST post confinement")
@@ -120,7 +120,7 @@ plot(conf_rr_trend, main = "Tendance générale de la série ST confinement")
 
 # Tendance locale confinement
 conf_rr_local <- local.trend(conf_aggregate)
-plot(conf_rr_local, main = "Tendances locales - Période de confinement")
+plot(conf_rr_local, main = "Tendances locales - Période de confinement", ylab = "Fréquentation magasin de détail et loisir")
 
 # Tendance générale post confinement
 set.seed(897)
@@ -153,6 +153,23 @@ abline(h = 0, col = "red", lty = 2)
 ```
 Pour la première série choisie, nous prenons la variable retail_recreation. Cela correspond au taux de déplacement depuis la norme (0). Si la valeur est négative, il y a moins de déplacement vers les magasins de détail et loisirs. Si la valeur est positives, la population a eu tendance à davantage se déplacer vers ceux-ci. 
 Ensuite, nous procédons à l'analyse de la série (dans ce même chunk pour un gain de place au sein du notebook, il se peut que ce soit mis différemment au niveau du report).
+Tout d'abord, la série montre qu'en début 2020, la fréquentation était très faible. Après les 6 premiers mois, la fréquentation revient à la normale avant de chuter à nouveau. Après la 2e moitié de 2021, la fréquentation est revue à la hausse, dépassant même la fréquentation initiale.
+
+Un premier graphique montre également uniquement la période de confinement. Elle reste moindre que la fréquentation en temps normale (ligne rouge) mais elle possède cependant des variations. En fin de confinement, la fréquentation remonte.
+
+L'analyse ACF nous montre un graphique ressemblant à celui d'un cycle périodique. Les barres au début et à la fin sont significative car elles dépassent l'intervalle de confiance. 
+
+Pour la période post-confinement, la fréquentation est largement supérieure à la normale, avec quelques variations, malgré une plus faible fréquentation début 2022.
+
+Post confinement, l'acf ne semble plus montrer un cycle périodique. On a cependant quelques barres significatives au tout début du graphique.
+
+Toujours post confinement, la série suit une loi normale car le qq-plot montre un bon alignement des quantiles observés avec ceux de la loi normale standard, avec seulement de légères déviations aux extrémités.
+
+La tendance générale et locale durant le confinement montre que la fréquentation baisse fortement début 2020, remonte vers fin 2020 avant de redescendre légèrement et puis remonter légèrement début 2021.
+
+Post confinement, les tendances générales et locales montrent une hausse de la fréquentation du milieu de 2021 jusque début 2022 avant de chuter fortement puis doucement revenir à la normale.
+
+Nous avons également séparé les différents confinements pour montrer ce que donnent plus précisément ces périodes en matière de fréquentation de magasins de détails et loisirs. 
 
 ```{r ts_residential}
 # Lucie sur la VAR = residential
@@ -296,4 +313,8 @@ Les tests acf montrent que la majorité des pics se situent à l'intérieur de l
 
 <!--% Lorsque toutes les analyses sont réalisées, terminez ce bloc-notes avec 3 à 6 phrases de conclusion en rapport avec ce que vous avez observé dans vos analyses. Quels sont les éléments les plus pertinents que vous retenez ? -->
 
-...vos conclusions ici...
+La pandémie a eu différents impacts selon les différents types de lieux fréquentés. 
+Pour les magasins de détail et de loisir, la fréquentation a dépassé les seuils d'avant la pandémie dès mi-2021, suggérant que les consommateurs ont eu une phase de rattrapage, vu qu'ils n'ont pas pu profiter de ce genre de services durant les confinements.
+à titre de comparaison, la fréquentation des lieux de travail n'est jamais revenue à la normale. Cela témoigne d'une transformation dans le monde professionnel.
+Les résidences ont été nettement plus fréquentées dû au confinement, ce qui est assez logique. Post-confinement, la fréquentation est restée supérieure à la normale, ce qui se corrèle bien avec la fréquentation des lieux de travail.
+Le 2e confinement a eu un impact nettement moins sévère que le premier.
