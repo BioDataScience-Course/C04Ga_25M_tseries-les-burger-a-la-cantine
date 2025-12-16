@@ -20,15 +20,15 @@ lang: fr
 
 <!--% Rédigez une courte introduction de 3 ou 5 phrases qui présente vos données. Ajoutez une phrase de but. Vous devez citer la bibliographie en utilisant le formatage Markdown ad hoc et en incluant votre référence au format bibtex dans le fichier references.bib. -->
 
-Lors de la pandémie Covid-2019, des mesures ont été prises sur les différentes habitudes de déplacement de la population. Ces données ont été récoltées en Belgique à partir du 15 février 2020 et jusqu'au 15 octobre 2022. Les milieux de fréquentation renseignés sont les lieux de loisirs, les commerces de détail, les commerces d'alimentation, les pharmacies, les parcs ainsi que les lieux de travail.
+Lors de la pandémie Covid-2019, des mesures ont été prises sur les différentes habitudes de déplacement de la population. Ces données ont été récoltées en Belgique à partir du 15 février 2020 et jusqu'au 15 octobre 2022. Les milieux de fréquentation renseignés sont les commerces de détail et loisirs, les commerces d'alimentation et pharmacies, les lieux de résidence, les parcs ainsi que les lieux de travail.
 
-Dans ce rapport, nous allons donc comparer les séries concernant les lieux de travail, les x et y. Ces analyses permettront de mettre en évidence l'impact des restrictions sanitaires mises en place lors de la pandémie sur la fréquentation sur la fréquentation des différents lieux étudiés.
+Dans ce rapport, nous allons donc comparer les séries concernant les lieux de travail, les lieux de résidences et les magasins de détail et loisirs. Ces analyses permettront de mettre en évidence l'impact des restrictions sanitaires mises en place lors de la pandémie sur la fréquentation sur la fréquentation des différents lieux étudiés.
 
 ## Matériel et méthodes
 
 <!--% Indiquez ici d'où viennent les données et aussi quel logiciel (et version) vous utilisez pour les analyses. Inspirez-vous des projets déjà réalisés. -->
 
-Les données viennent de Datacovid qui vient de Google.
+Les données viennent de Datacovid qui provient de Google.
 
 L'analyse est réalisée avec la [SciViews Box 2023](https://www.sciviews.org/software/svbox/) dans [Saturn Cloud](https://saturncloud.io) (Linux), utilisant le [logiciel R](https://www.r-project.org) (`r R.version.string`). Le package {pastecs} version `r packageVersion("pastecs")` est utilisé pour étudier la série temporelle.
 
@@ -250,14 +250,14 @@ plot(après_tl, main = "Tendances locales de la période post-confinement")
 Pour correspondre à la variable "workplace", nous allons diviser notre série en 2 : une partie confinement et une partie post-confinement. 
 
 Tout d'abord, la partie contenant les deux confinements :
-* Les différents graphiques permettent de voir que la population belge est restée plus souvent à la maison. 
-* L'autocorrélation est non-significative car la plupart des pics ne se situent pas en dehors de l'intervalle de confiance. 
-* La tendance est positive selon les tests de tendance. 
+- Les différents graphiques permettent de voir que la population belge est restée plus souvent à la maison. 
+- L'autocorrélation est non-significative car la plupart des pics ne se situent pas en dehors de l'intervalle de confiance. 
+- La tendance est positive selon les tests de tendance. 
 
 Ensuite, pour la période post-confinements :
-* Les graphiques présentent des oscillations montrant le retour des déplacements (par exemple, le travail) mais le télétravail étant devenu plus fréquents, on reste tout de même plus à la maison. 
-* Le test afc a la majorité des pics situés à l'intérieur de l'enveloppe de confiance donc l'autocorrélation n'est pas significative. 
-* Les tests de tendance montrent une forte variabilité ce qui pourrait s'expliquer par le travail en hybride. 
+- Les graphiques présentent des oscillations montrant le retour des déplacements (par exemple, le travail) mais le télétravail étant devenu plus fréquents, on reste tout de même plus à la maison. 
+- Le test afc a la majorité des pics situés à l'intérieur de l'enveloppe de confiance donc l'autocorrélation n'est pas significative. 
+- Les tests de tendance montrent une forte variabilité ce qui pourrait s'expliquer par le travail en hybride. 
 
 ```{r ts_workplaces}
 # Solène sur la VAR = workplaces
