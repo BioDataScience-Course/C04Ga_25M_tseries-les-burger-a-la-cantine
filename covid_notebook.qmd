@@ -202,6 +202,7 @@ Le rapport commencera par une analyse initiale avec l'aide de la série jour pou
 # Lucie
 acf(residential_ts)
 trend.test(residential_ts)
+set.seed(456)
 plot(trend.test(residential_ts, R = 999))
 local.trend(residential_ts)
 # abandon de l'analyse spectrale car la série est trop compliquée à stationnariser !
@@ -214,39 +215,49 @@ De plus, la série suit une loi normale car on voit sur le graphique qq-plot que
 
 L'analyse de la tendance locale montre qu'au début 2020, il y a des valeurs très faibles qui vont ensuite monter jusqu'à mi 2020. La période de mi 2020 va rester assez stable avec quelques variations jusqu'en 2021. De 2021 à 2022, il y a eu un déclin progressif pour terminer par se stabiliser jusqu'à la fin de 2022.
 
-Pour continuer l'analyse de façon plus poussée, il faut choisir une seule série cohérente. La série jour par jour va être d'office éliminée car elle contient énormément de bruit journalier ce qui la rend moins lisible et pourrait causer des problèmes au niveau de l'autocorrélation. De plus, cette série a été analysée comme série initiale. Il peut être intéressant de prendre les deux série semaine par semaine (avec et sans les weekends) pour voir s'il y a ou non une différence entre les deux. On pourrait s'attendre à peu de différence car le covid a principalement influencé le travail en semaine comparée aux loisirs en weekends. De plus, la série semaine par semaine peut être comparée avec la variable "workplace". 
+Pour continuer l'analyse de façon plus poussée, il faut choisir une seule série cohérente. La série jour par jour va être d'office éliminée car elle contient énormément de bruit journalier ce qui la rend moins lisible et pourrait causer des problèmes au niveau de l'autocorrélation. De plus, cette série a été analysée comme série initiale. Il peut être intéressant de prendre la série semaine par semaine sans les weekends pour comparer cette série avec celle de la variable "workplace".
 
 ```{r residential_analysis_final}
 # Lucie
 # Décomposition de la série: période comprenant les 2 confinements (du 18 mars 2020 au 9 juin 2021) + graphique + autocorrélation + tendance générale + tendance locale
-avant <- window(residential_ts1, start = c(2020, 11), end = c(2021, 23))
-plot(avant, xlab = "Temps", ylab = "Variation dans la présence au travail (%)", main = "Période de confinement: Jours de la semaine agrégés")
+avant <- window(residential_ts2, start = c(2020, 11), end = c(2021, 23))
+plot(avant, xlab = "Temps", ylab = "Variation dans la présence à la maison (%)", main = "Période de confinement: Jours de la semaine agrégés sans les weekends")
 abline(h = 0, col = "red", lty = 2)
 
-acf(avant, main = "ACF de la série ST confinement")
+acf(avant, main = "ACF de la série confinement")
 
 set.seed(123)
 avant_tg <- trend.test(avant, R = 999)
-plot(avant_tg, main = "Tendance générale de la série ST confinement")
+plot(avant_tg, main = "Tendance générale de la série confinement")
 
 avant_tl <- local.trend(avant)
-plot(avant_tl, main = "Tendances locales - Période de confinement")
+plot(avant_tl, main = "Tendances locales de la période de confinement")
 
 # Décomposition de la série: période après les 2 confinements (du 9 juin 2021 à la fin de 2022) + graphique + autocorrélation + tendance générale + tendance locale
-après <- window(residential_ts1, start = c(2021, 23), end = c(2022, 41))
-plot(après, xlab = "Temps", ylab = "Variation dans la présence au travail (%)", main = "Période post confinement: Jours de la semaine agrégés")
+après <- window(residential_ts2, start = c(2021, 23), end = c(2022, 41))
+plot(après, xlab = "Temps", ylab = "Variation dans la présence à la maison (%)", main = "Période de post confinement: Jours de la semaine agrégés sans les weekends")
 abline(h = 0, col = "red", lty = 2)
 
-acf(après, main = "ACF de la série ST post confinement")
+acf(après, main = "ACF de la série post confinement")
 
 set.seed(321)
 après_tg <- trend.test(après, R = 999)
-plot(après_tg, main = "Tendance générale de la série ST Post confinement")
+plot(après_tg, main = "Tendance générale de la série Post confinement")
 
 après_tl <- local.trend(après)
-plot(après_tl, main = "Tendances locales - Période post-confinement")
+plot(après_tl, main = "Tendances locales de la période post-confinement")
 ```
-balablab
+Pour correspondre à la variable "workplace", nous allons diviser notre série en 2 : une partie confinement et une partie post-confinement. 
+
+Tout d'abord, la partie contenant les deux confinements :
+* Les différents graphiques permettent de voir que la population belge est restée plus souvent à la maison. 
+* L'autocorrélation est non-significative car la plupart des pics ne se situent pas en dehors de l'intervalle de confiance. 
+* La tendance est positive selon les tests de tendance. 
+
+Ensuite, pour la période post-confinements :
+* Les graphiques présentent des oscillations montrant le retour des déplacements (par exemple, le travail) mais le télétravail étant devenu plus fréquents, on reste tout de même plus à la maison. 
+* Le test afc a la majorité des pics situés à l'intérieur de l'enveloppe de confiance donc l'autocorrélation n'est pas significative. 
+* Les tests de tendance montrent une forte variabilité ce qui pourrait s'expliquer par le travail en hybride. 
 
 ```{r ts_workplaces}
 # Solène sur la VAR = workplaces
