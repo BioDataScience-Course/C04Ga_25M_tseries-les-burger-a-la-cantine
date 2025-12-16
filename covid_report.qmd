@@ -36,6 +36,7 @@ L'analyse est réalisée avec la SciViews Box 2023 dans Saturn Cloud (Linux), ut
 ## Résultats
 
 <!--% Présentez les analyses les plus pertinents que vous avez sélectionnés. Structurez la section en partie avec des titres explicites de niveau trois.-->
+
 ```{r setup , include=FALSE}
 # Nécessaire pour les tests SDD, ne pas utiliser dans un "vrai" projet
 if (!"tools:tests" %in% search())
