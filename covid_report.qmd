@@ -85,7 +85,7 @@ plot(workplaces_ts2, ylab = "Pourcentage de déplacement vers les lieux de trava
 Ce graphique illustre une chute drastique de la fréquentation des lieux de travail à -70% lors du premier confinement (mars 2020), conséquence de l'obligation généralisée du télétravail. La récupération est progressive avec de fortes fluctuations durant 2020-2021 (-20 à -50%), et même en 2022, la fréquentation oscille entre -40% et -10%, témoignant d'un changement structurel où le télétravail hybride s'est normalisé et ne permet plus un retour complet aux niveaux pré-pandémiques.
 
 # Analyse des différentes suites temporelles
-```{r rr_ préconfinement}
+```{r rr_ confinement}
 conf_rr <- window(retail_recreation_ts, start = c(2020, 77), end = c(2021, 160))
 conf_aggregate <- aggregate(conf_rr, 52, FUN = collapse::fmean, ts.eps = 1/52)
 plot(conf_aggregate, xlab = "Temps", ylab = "Fréquentation des magasins de détails et de loisir (%)", main = "Période de confinement: Jours de la semaine agrégés")
@@ -122,7 +122,7 @@ plot(after_rr_local, main = "Tendances locales - Période post-confinement")
 
 Durant la période post-confinement (juin 2021 - octobre 2022), l'ensemble des graphiques (série agrégée, acf, test de tendance et tendances locales) révèle une fréquentation des commerces oscillant fortement entre -5% et +25%, suivie d'une stabilisation autour de +10 à +15%. Le test acf montre des autocorrélations majoritairement non-significatives indiquant l'absence de structure temporelle forte, tandis que le test de tendance et les tendances locales révèlent un pic de fréquentation exceptionnellement élevé (+90) à l'été 2021 reflétant un effet de rattrapage de la consommation différée, suivi d'une décroissance vers des niveaux proches de zéro en 2022, suggérant une normalisation progressive des comportements d'achat avec toutefois une variabilité persistante témoignant de nouveaux patterns de consommation post-pandémiques.
 
-```{r r_ préconfinement}
+```{r r_ confinement}
 avant <- window(residential_ts2, start = c(2020, 11), end = c(2021, 23))
 plot(avant, xlab = "Temps", ylab = "Variation dans la présence à la maison (%)", main = "Période de confinement: Jours de la semaine agrégés sans les weekends")
 abline(h = 0, col = "red", lty = 2)
@@ -152,11 +152,12 @@ set.seed(371)
 après_tg <- trend.test(après, R = 999)
 plot(après_tg, main = "Tendance générale de la série Post confinement")
 
-# après_tl <- local.trend(après)
-# plot(après_tl, main = "Tendances locales de la période post-confinement")
+après_tl <- local.trend(après)
+plot(après_tl, main = "Tendances locales de la période post-confinement")
 ```
+Lors de la période suivant le confinement (juin 2021 à octobre 2022), les différents graphiques (série agrégée, acf, test de tendance et tendances locales) montrent une fréquentation du domicile plus récurrente que la moyenne (jusqu'à +40%) mais qui a nettement diminué que lors du confinement. Le test permettant de voir l'autocorrélation n'est pas significative ce qui montre une absence de structure temporelle. Cependant les tests de tendance révèlent que les résidences ont connues un pic de fréquentation au début de l'année 2022 (+40%).
 
-```{r w_ préconfinement}
+```{r w_ confinement}
 workplaces_ts <- ts(mobw$workplaces, start = c(2020, 46), frequency = 365)
 conf <- window(workplaces_ts, start = c(2020, 78), end = c(2021, 160))
 conf_agr <- aggregate(conf, 52, FUN = collapse::fmean, ts.eps = 1/52)
@@ -172,7 +173,8 @@ plot(tt_conf, main = "Tendance générale de la série ST confinement")
 lt_conf <- local.trend(conf_agr)
 plot(lt_conf, main = "Tendances locales - Période de confinement")
 ```
-balbalba
+En ce qui concerne les lieux de travail lors du confinement (mars 2020 - juin 2021), une baisse de leur fréquentation peut être notée. On a jusqu'à -250% de fréquentation pour ces lieux. Le test acf indique que la plupart des pics sont non-significative ce qui indique une faible dépendance temporelle. Par contre, la tendance baisse jusqu'au milieu de l'année 2020 (en dessous de -250%) pour ensuite remonter petit à petit et atteindre -50%.
+
 ```{r r_ postconfinement}
 workplaces_ts <- ts(mobw$workplaces, start = c(2020, 46), frequency = 365)
 after <- window(workplaces_ts, start = c(2021, 160), end = c(2022, 288))
@@ -189,6 +191,7 @@ plot(tt_after, main = "Tendance générale de la série ST Post confinement")
 lt_after <- local.trend(after_agr)
 plot(lt_after, main = "Tendances locales - Période post-confinement")
 ```
+De mars 2020 à juin 2021, après les confinements, les graphiques indique encore une présence sur les lieux de travail moins fréquente que la moyenne malgré un pic en avril 2022. Le test d'ACF n'est pas significatif tandis que la tendance générale est à l'augmentation. La tendance locale quant à elle montre une chute de la fréquentation des lieux de travail jusqu'en 2022 (plus de -100%) pour ensuite remonter au dessus de la fréquence moyenne en avril 2022. Cela est suivie d'une légère descente en juin 2022 (-50%) pour finir par remonter jusqu'à la moyenne en août 2022.
 
 ## Discussion et Conclusion
 
