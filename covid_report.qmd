@@ -137,6 +137,9 @@ avant_tl <- local.trend(avant)
 plot(avant_tl, main = "Tendances locales de la période de confinement")
 ```
 
+Durant la période de confinement (mars 2020 - juin 2021), l'ensemble des graphiques (série agrégée, acf, test de tendance et tendances locales) révèle une augmentation spectaculaire de la présence résidentielle atteignant un pic de +28% au début du premier confinement, suivie d'une diminution progressive oscillant entre +20% et +5% reflétant l'alternance des restrictions sanitaires. Le test acf montre des autocorrélations significatives décroissantes aux premiers lags indiquant une forte dépendance temporelle, tandis que le test de tendance (cusum atteignant +120 en avril 2020) et les tendances locales confirment un pic maximal au printemps 2020 suivi d'une décroissance continue mais la présence reste systématiquement positive, témoignant de l'impact durable du télétravail et des restrictions de déplacement même durant les périodes d'assouplissement.
+
+
 ```{r r_ postconfinement}
 # Décomposition de la série: période après les 2 confinements (du 9 juin 2021 à la fin de 2022) + graphique + autocorrélation + tendance générale + tendance locale
 après <- window(residential_ts2, start = c(2021, 23), end = c(2022, 41))
