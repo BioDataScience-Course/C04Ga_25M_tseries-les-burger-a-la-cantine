@@ -57,6 +57,23 @@ covid <- srename(covid, retail_and_recreation_percent_change_from_baseline = ret
 skimr::skim(covid)
 ```
 
+```{r retail_and_recreation_ts}
+mobw <- covid
+mobw$weekdays <- weekdays(as.POSIXct(mobw$date))
+mobw[mobw$weekdays == "Saturday" | mobw$weekdays == "Sunday" , 2:7] <- NA
+retail_recreation_ts <- ts(mobw$retail_recreation, start = c(2020, 46), frequency = 365)
+retail_recreation_ts2 <- aggregate(retail_recreation_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(retail_recreation_ts2, ylab = "Fréquentation des magasins de détail et loisirs", xlab = "Temps")
+```
+```{r ts_residential}
+residential_ts2 <- aggregate(ts(mobw$residential, start = c(2020, 46), frequency = 365), 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(residential_ts2, ylab = "Pourcentage de déplacement vers les lieux de résidences", xlab = "Temps", main = "Mobilité vers les lieux de résidences semaine par semaine en omettant les weekends")
+```
+```{r ts_workplaces}
+workplaces_ts <- ts(mobw$workplaces, start = c(2020, 46), frequency = 365)
+workplaces_ts2 <- aggregate(workplaces_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(workplaces_ts2, ylab = "Pourcentage de déplacement vers les lieux de travails")
+```
 ## Discussion et Conclusion
 
 <!--% En tenant compte du but de votre carnet de notes et de vos résultats, discutez de résultats et proposez des conclusions à votre analyse en 5 à 10 phrases. -->
