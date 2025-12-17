@@ -73,7 +73,7 @@ mobw$weekdays <- weekdays(as.POSIXct(mobw$date))
 mobw[mobw$weekdays == "Saturday" | mobw$weekdays == "Sunday" , 2:7] <- NA 
 ```
 
-Pour chaque variable, une série chronologique est créée. Au 0, c'est la valeur de départ, le déplacement "classique", normal, pas de déplacement supplémentaire ou moins de déplacement pour la raison de la variable. Quand la valeur est négative, le taux de déplacement est moindre comparé aux années d'avant "normales". Quand elle est positive, le déplacement est supérieur par rapport aux années d'avant. Pour l'axe du temps, lorsque le temps s'affiche, par exemple, "2020.5", cela signifie que nous sommes à la moitié de l'année. Au cas où, pour les futures analyses, les différentes séries ont également été scindées (au lieu d'avoir un seul objet mts avec toutes les séries comprises, il y aura différents objets de classe ts) L'analyse est scindée, entre les weekends et les jours de la semaine.
+Au 0, c'est la valeur de départ, le déplacement "classique", normal, pas de déplacement supplémentaire ou moins de déplacement pour la raison de la variable. Quand la valeur est négative, le taux de déplacement est moindre comparé aux années d'avant "normales". Quand elle est positive, le déplacement est supérieur par rapport aux années d'avant. Pour l'axe du temps, lorsque le temps s'affiche, par exemple, "2020.5", cela signifie que nous sommes à la moitié de l'année. Au cas où, pour les futures analyses, les différentes séries ont également été scindées (au lieu d'avoir un seul objet mts avec toutes les séries comprises, il y aura différents objets de classe ts) L'analyse est scindée, entre les weekends et les jours de la semaine.
 
 ```{r retail and recreation}
 #Anaïs sur l'analyse des déplacements vers les magasins de détail et loisirs
@@ -157,7 +157,7 @@ Pour la période post-confinement, la fréquentation est largement supérieure �
 
 Post confinement, l'acf ne semble plus montrer un cycle périodique. On a cependant quelques barres significatives au tout début du graphique.
 
-Toujours post confinement, la série suit une loi normale car le qq-plot montre un bon alignement des quantiles observés avec ceux de la loi normale standard, avec seulement de légères déviations aux extrémités.
+Toujours post confinement, les rédidus de la série suivent une loi normale car le qq-plot montre un bon alignement des quantiles observés avec ceux de la loi normale standard, avec seulement de légères déviations aux extrémités.
 
 La tendance générale et locale durant le confinement montre que la fréquentation baisse fortement début 2020, remonte vers fin 2020 avant de redescendre légèrement et puis remonter légèrement début 2021.
 
