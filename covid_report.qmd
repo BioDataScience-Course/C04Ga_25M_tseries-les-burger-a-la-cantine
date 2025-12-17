@@ -93,7 +93,7 @@ plot(conf_rr_local, main = "Tendances locales - Période de confinement", ylab =
 ```
 
 ```{r rr_ postconfinement}
-after_rr <- window(retail_recreation_ts, start = c(2021, 161), end = c(2022, 365))
+after_rr <- window(retail_recreation_ts, start = c(2021, 161))
 after_aggregate <- aggregate(after_rr, 52, FUN = collapse::fmean, ts.eps = 1/52)
 plot(after_aggregate, xlab = "Temps", ylab = "Fréquenatation des magasins de détails et de loisir (%)", main = "Période post confinement: Jours de la semaine agrégés")
 abline(h = 0, col = "red", lty = 2)
@@ -130,7 +130,7 @@ abline(h = 0, col = "red", lty = 2)
 
 acf(après, main = "ACF de la série post confinement")
 
-set.seed(321)
+set.seed(371)
 après_tg <- trend.test(après, R = 999)
 plot(après_tg, main = "Tendance générale de la série Post confinement")
 
