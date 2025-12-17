@@ -66,15 +66,24 @@ retail_recreation_ts <- ts(mobw$retail_recreation, start = c(2020, 46), frequenc
 retail_recreation_ts2 <- aggregate(retail_recreation_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
 plot(retail_recreation_ts2, ylab = "Fréquentation des magasins de détail et loisirs", xlab = "Temps")
 ```
+
+Ce graphique révèle une chute drastique de la fréquentation des commerces de détail et loisirs à -80% lors du premier confinement (mars 2020), suivie d'une récupération progressive avec de fortes fluctuations durant 2020-2021 reflétant l'alternance des restrictions sanitaires. À partir de mi-2021, la fréquentation se stabilise au-dessus des niveaux pré-covid (+10 à +20%), suggérant un effet de rattrapage de la consommation différée durant la pandémie.
+
 ```{r ts_residential}
 residential_ts2 <- aggregate(ts(mobw$residential, start = c(2020, 46), frequency = 365), 52, FUN = collapse::fmean, ts.eps = 1/52)
 plot(residential_ts2, ylab = "Pourcentage de déplacement vers les lieux de résidences", xlab = "Temps", main = "Mobilité vers les lieux de résidences semaine par semaine en omettant les weekends")
 ```
+
+Ce graphique montre une augmentation spectaculaire de la présence résidentielle atteignant +28% lors du premier confinement (mars 2020), reflétant les obligations de rester à domicile et le télétravail massif. La présence diminue progressivement mais reste systématiquement positive (+5 à +15%) durant 2021-2022, témoignant d'un changement structurel durable où le télétravail et la vie à domicile se sont normalisés même après la levée des restrictions sanitaires.
+
 ```{r ts_workplaces}
 workplaces_ts <- ts(mobw$workplaces, start = c(2020, 46), frequency = 365)
 workplaces_ts2 <- aggregate(workplaces_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
 plot(workplaces_ts2, ylab = "Pourcentage de déplacement vers les lieux de travails")
 ```
+
+Ce graphique illustre une chute drastique de la fréquentation des lieux de travail à -70% lors du premier confinement (mars 2020), conséquence de l'obligation généralisée du télétravail. La récupération est progressive avec de fortes fluctuations durant 2020-2021 (-20 à -50%), et même en 2022, la fréquentation oscille entre -40% et -10%, témoignant d'un changement structurel où le télétravail hybride s'est normalisé et ne permet plus un retour complet aux niveaux pré-pandémiques.
+
 # Analyse des différentes suites temporelles
 ```{r rr_ préconfinement}
 conf_rr <- window(retail_recreation_ts, start = c(2020, 77), end = c(2021, 160))
@@ -92,6 +101,9 @@ conf_rr_local <- local.trend(conf_aggregate)
 plot(conf_rr_local, main = "Tendances locales - Période de confinement", ylab = "Fréquentation magasin de détail et loisir")
 ```
 
+Durant la période de confinement (mars 2020 - juin 2021), l'ensemble des graphiques (série agrégée, acf, test de tendance et tendances locales) révèle une évolution en forme de "U" de la fréquentation des commerces de détail et loisirs : chute brutale à -80% début 2020, récupération progressive vers 0% à l'été 2020, puis stabilisation autour de -30% durant 2021. Le test acf montre des autocorrélations significatives décroissantes aux premiers lags, indiquant une dépendance temporelle forte liée aux mesures sanitaires successives, tandis que le test de tendance confirme une amélioration globale significative (ligne rouge croissante) malgré les fluctuations, et les tendances locales révèlent un minimum atteint en avril 2020 suivi d'une récupération soutenue jusqu'à mi-2020 avant une stagnation relative reflétant l'alternance des restrictions.
+
+
 ```{r rr_ postconfinement}
 after_rr <- window(retail_recreation_ts, start = c(2021, 161), end = c(2022, 288))
 after_aggregate <- aggregate(after_rr, 52, FUN = collapse::fmean, ts.eps = 1/52)
@@ -107,6 +119,9 @@ plot(after_rr_trend, main = "Tendance générale de la série ST Post confinemen
 after_rr_local <- local.trend(after_aggregate)
 plot(after_rr_local, main = "Tendances locales - Période post-confinement")
 ```
+
+Durant la période post-confinement (juin 2021 - octobre 2022), l'ensemble des graphiques (série agrégée, acf, test de tendance et tendances locales) révèle une fréquentation des commerces oscillant fortement entre -5% et +25%, suivie d'une stabilisation autour de +10 à +15%. Le test acf montre des autocorrélations majoritairement non-significatives indiquant l'absence de structure temporelle forte, tandis que le test de tendance et les tendances locales révèlent un pic de fréquentation exceptionnellement élevé (+90) à l'été 2021 reflétant un effet de rattrapage de la consommation différée, suivi d'une décroissance vers des niveaux proches de zéro en 2022, suggérant une normalisation progressive des comportements d'achat avec toutefois une variabilité persistante témoignant de nouveaux patterns de consommation post-pandémiques.
+
 ```{r r_ préconfinement}
 avant <- window(residential_ts2, start = c(2020, 11), end = c(2021, 23))
 plot(avant, xlab = "Temps", ylab = "Variation dans la présence à la maison (%)", main = "Période de confinement: Jours de la semaine agrégés sans les weekends")
