@@ -90,7 +90,7 @@ conf_rr <- window(retail_recreation_ts, start = c(2020, 77), end = c(2021, 160))
 
 # Décomposition de la série: période après les 2 confinements (du 10 juin 2021 à la fin de 2022)
 
-after_rr <- window(retail_recreation_ts, start = c(2021, 161), end = c(2022, 365))
+after_rr <- window(retail_recreation_ts, start = c(2021, 161), end = c(2022, 288))
 
 # Agrégation dans le but de supprimer les NA, pour le jeu de données conf
 

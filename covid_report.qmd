@@ -93,7 +93,7 @@ plot(conf_rr_local, main = "Tendances locales - Période de confinement", ylab =
 ```
 
 ```{r rr_ postconfinement}
-after_rr <- window(retail_recreation_ts, start = c(2021, 161))
+after_rr <- window(retail_recreation_ts, start = c(2021, 161), end = c(2022, 288))
 after_aggregate <- aggregate(after_rr, 52, FUN = collapse::fmean, ts.eps = 1/52)
 plot(after_aggregate, xlab = "Temps", ylab = "Fréquenatation des magasins de détails et de loisir (%)", main = "Période post confinement: Jours de la semaine agrégés")
 abline(h = 0, col = "red", lty = 2)
@@ -121,7 +121,7 @@ plot(avant_tg, main = "Tendance générale de la série confinement")
 avant_tl <- local.trend(avant)
 plot(avant_tl, main = "Tendances locales de la période de confinement")
 ```
-blalal
+
 ```{r r_ postconfinement}
 # Décomposition de la série: période après les 2 confinements (du 9 juin 2021 à la fin de 2022) + graphique + autocorrélation + tendance générale + tendance locale
 après <- window(residential_ts2, start = c(2021, 23), end = c(2022, 41))
@@ -134,10 +134,10 @@ set.seed(371)
 après_tg <- trend.test(après, R = 999)
 plot(après_tg, main = "Tendance générale de la série Post confinement")
 
-après_tl <- local.trend(après)
-plot(après_tl, main = "Tendances locales de la période post-confinement")
+# après_tl <- local.trend(après)
+# plot(après_tl, main = "Tendances locales de la période post-confinement")
 ```
-blblbl
+
 ```{r w_ préconfinement}
 workplaces_ts <- ts(mobw$workplaces, start = c(2020, 46), frequency = 365)
 conf <- window(workplaces_ts, start = c(2020, 78), end = c(2021, 160))
