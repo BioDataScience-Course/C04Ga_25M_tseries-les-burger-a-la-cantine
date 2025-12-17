@@ -157,7 +157,7 @@ Pour la période post-confinement, la fréquentation est largement supérieure �
 
 Post confinement, l'acf ne semble plus montrer un cycle périodique. On a cependant quelques barres significatives au tout début du graphique.
 
-Toujours post confinement, la série suit une loi normale car le qq-plot montre un bon alignement des quantiles observés avec ceux de la loi normale standard, avec seulement de légères déviations aux extrémités.
+Toujours post confinement, les rédidus de la série suivent une loi normale car le qq-plot montre un bon alignement des quantiles observés avec ceux de la loi normale standard, avec seulement de légères déviations aux extrémités.
 
 La tendance générale et locale durant le confinement montre que la fréquentation baisse fortement début 2020, remonte vers fin 2020 avant de redescendre légèrement et puis remonter légèrement début 2021.
 
