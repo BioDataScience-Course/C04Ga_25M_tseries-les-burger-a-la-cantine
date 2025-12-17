@@ -196,3 +196,9 @@ De mars 2020 à juin 2021, après les confinements, les graphiques indique encor
 ## Discussion et Conclusion
 
 <!--% En tenant compte du but de votre carnet de notes et de vos résultats, discutez de résultats et proposez des conclusions à votre analyse en 5 à 10 phrases. -->
+La pandémie du Covid-19 a eu un profond impact sur divers domaines, pendant les confinements et également par après.
+En ce qui concerne les magasins de détails et de loisir, il y a eu une énorme chute (-80% en mars 2020) de leur fréquentation pendant les 2 confinements. Cette fréquentation a ensuite été revue à la hausse, dépassant même les seuils initiaux. Cette variation de la fréquentation nous montre que la population wallonne a une forte résilience et a développé un besoin de compensation (+90% en été 2021) envers ce type de commerce une fois que la crise fut finie.
+Les séries sur les lieux de travail et sur les résidences sont complémentaires ; lorsque l'une montre une fréquentation à la baisse, il est fort probable que l'autre montre une augmentation. Il y a un pic (+28%) de présence résidentielle pendant le confinement puis cette fréquentation reste positive : il y a une adoption du télétravail dans de nombreux secteurs lorsque cela est possible. Tandis que du côté des lieux de travail, il y a une récupération de la fréquentation (on passe de -40% à -10% en 2022) mais elle reste incomplète : le télétravail reste en place, de nombreuses entreprises optent pour un travail hybride (en partie présentiel, en partie télétravail).
+Les autocorrélations sont fortes durant le confinement, ce qui démontre l'adoption de ces différents comportements.
+
+Pour résumé tout ceci, il en va de dire que la population wallonne a subi des changements post-confinement. Elle a dû s'adapter en période de crise et a trouvé de meilleurs moyens de fonctionner, tant au niveau de leur travail, qu'au niveau des loisirs.
