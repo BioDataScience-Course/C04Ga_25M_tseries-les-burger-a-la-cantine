@@ -45,6 +45,7 @@ SciViews::R("ts", lang = "fr")
 ```{r importation}
 # Importation des données
 # Anaïs
+SciViews::R("ts", lang = "fr")
 covid <- read("data/mobility_wallonia.rds")
 # Un remaniement des données est nécessaire pour renommer les variables de façon plus simple à utiliser
 covid <- srename(covid, retail_and_recreation_percent_change_from_baseline = retail_recreation,
@@ -56,7 +57,7 @@ covid <- srename(covid, retail_and_recreation_percent_change_from_baseline = ret
 # visualisation des données telles quelles
 skimr::skim(covid)
 ```
-
+# Les différentes suites temporelles
 ```{r retail_and_recreation_ts}
 mobw <- covid
 mobw$weekdays <- weekdays(as.POSIXct(mobw$date))
@@ -74,6 +75,103 @@ workplaces_ts <- ts(mobw$workplaces, start = c(2020, 46), frequency = 365)
 workplaces_ts2 <- aggregate(workplaces_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
 plot(workplaces_ts2, ylab = "Pourcentage de déplacement vers les lieux de travails")
 ```
+# Analyse des différentes suites temporelles
+```{r rr_ préconfinement}
+conf_rr <- window(retail_recreation_ts, start = c(2020, 77), end = c(2021, 160))
+conf_aggregate <- aggregate(conf_rr, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(conf_aggregate, xlab = "Temps", ylab = "Fréquentation des magasins de détails et de loisir (%)", main = "Période de confinement: Jours de la semaine agrégés")
+abline(h = 0, col = "red", lty = 2)
+
+acf(conf_aggregate, main = "ACF de la série ST confinement")
+
+set.seed(456)
+conf_rr_trend <- trend.test(conf_aggregate, R = 999)
+plot(conf_rr_trend, main = "Tendance générale de la série ST confinement")
+
+conf_rr_local <- local.trend(conf_aggregate)
+plot(conf_rr_local, main = "Tendances locales - Période de confinement", ylab = "Fréquentation magasin de détail et loisir")
+```
+
+```{r rr_ postconfinement}
+after_rr <- window(retail_recreation_ts, start = c(2021, 161), end = c(2022, 365))
+after_aggregate <- aggregate(after_rr, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(after_aggregate, xlab = "Temps", ylab = "Fréquenatation des magasins de détails et de loisir (%)", main = "Période post confinement: Jours de la semaine agrégés")
+abline(h = 0, col = "red", lty = 2)
+
+acf(after_aggregate, main = "ACF de la série ST post confinement")
+
+set.seed(897)
+after_rr_trend <- trend.test(after_aggregate, R = 999)
+plot(after_rr_trend, main = "Tendance générale de la série ST Post confinement")
+
+after_rr_local <- local.trend(after_aggregate)
+plot(after_rr_local, main = "Tendances locales - Période post-confinement")
+```
+```{r r_ préconfinement}
+avant <- window(residential_ts2, start = c(2020, 11), end = c(2021, 23))
+plot(avant, xlab = "Temps", ylab = "Variation dans la présence à la maison (%)", main = "Période de confinement: Jours de la semaine agrégés sans les weekends")
+abline(h = 0, col = "red", lty = 2)
+
+acf(avant, main = "ACF de la série confinement")
+
+set.seed(123)
+avant_tg <- trend.test(avant, R = 999)
+plot(avant_tg, main = "Tendance générale de la série confinement")
+
+avant_tl <- local.trend(avant)
+plot(avant_tl, main = "Tendances locales de la période de confinement")
+```
+blalal
+```{r r_ postconfinement}
+# Décomposition de la série: période après les 2 confinements (du 9 juin 2021 à la fin de 2022) + graphique + autocorrélation + tendance générale + tendance locale
+après <- window(residential_ts2, start = c(2021, 23), end = c(2022, 41))
+plot(après, xlab = "Temps", ylab = "Variation dans la présence à la maison (%)", main = "Période de post confinement: Jours de la semaine agrégés sans les weekends")
+abline(h = 0, col = "red", lty = 2)
+
+acf(après, main = "ACF de la série post confinement")
+
+set.seed(321)
+après_tg <- trend.test(après, R = 999)
+plot(après_tg, main = "Tendance générale de la série Post confinement")
+
+après_tl <- local.trend(après)
+plot(après_tl, main = "Tendances locales de la période post-confinement")
+```
+blblbl
+```{r w_ préconfinement}
+workplaces_ts <- ts(mobw$workplaces, start = c(2020, 46), frequency = 365)
+conf <- window(workplaces_ts, start = c(2020, 78), end = c(2021, 160))
+conf_agr <- aggregate(conf, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(conf_agr, xlab = "Temps", ylab = "Variation dans la présence au travail (%)", main = "Période de confinement: Jours de la semaine agrégés")
+abline(h = 0, col = "red", lty = 2)
+
+acf(conf_agr, main = "ACF de la série ST confinement")
+
+set.seed(21)
+tt_conf <- trend.test(conf_agr, R = 999)
+plot(tt_conf, main = "Tendance générale de la série ST confinement")
+
+lt_conf <- local.trend(conf_agr)
+plot(lt_conf, main = "Tendances locales - Période de confinement")
+```
+balbalba
+```{r r_ postconfinement}
+workplaces_ts <- ts(mobw$workplaces, start = c(2020, 46), frequency = 365)
+after <- window(workplaces_ts, start = c(2021, 160), end = c(2022, 288))
+after_agr <- aggregate(after, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(after_agr, xlab = "Temps", ylab = "Variation dans la présence au travail (%)", main = "Période post confinement: Jours de la semaine agrégés")
+abline(h = 0, col = "red", lty = 2)
+
+acf(after_agr, main = "ACF de la série ST post confinement")
+
+set.seed(210)
+tt_after <- trend.test(after_agr, R = 999)
+plot(tt_after, main = "Tendance générale de la série ST Post confinement")
+
+lt_after <- local.trend(after_agr)
+plot(lt_after, main = "Tendances locales - Période post-confinement")
+```
+
 ## Discussion et Conclusion
 
 <!--% En tenant compte du but de votre carnet de notes et de vos résultats, discutez de résultats et proposez des conclusions à votre analyse en 5 à 10 phrases. -->

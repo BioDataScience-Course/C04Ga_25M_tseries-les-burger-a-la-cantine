@@ -251,6 +251,24 @@ Pour correspondre à la variable "workplace", nous allons diviser notre série e
 Tout d'abord, la partie contenant les deux confinements : - Les différents graphiques permettent de voir que la population belge est restée plus souvent à la maison. - L'autocorrélation est non-significative car la plupart des pics ne se situent pas en dehors de l'intervalle de confiance. - La tendance est positive selon les tests de tendance.
 
 Ensuite, pour la période post-confinements : - Les graphiques présentent des oscillations montrant le retour des déplacements (par exemple, le travail) mais le télétravail étant devenu plus fréquents, on reste tout de même plus à la maison. - Le test afc a la majorité des pics situés à l'intérieur de l'enveloppe de confiance donc l'autocorrélation n'est pas significative. - Les tests de tendance montrent une forte variabilité ce qui pourrait s'expliquer par le travail en hybride.
+```{r residential_confinements}
+# Décomposition: période de confinement 1, période entre les deux confinements, et la deuxième période de confinement
+conf1_r <- window(residential_ts2, start = c(2020, 77), end = c(2020, 167))
+conf1_r_agr <- aggregate(conf1_r, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(conf1_r_agr, xlab = "Temps", ylab = "Variation dans les déplacements vers les magasins de détails et de loisir (%)", main = "Premier confinement")
+abline(h = 0, col = "red", lty = 2)
+
+data.between_r <- window(residential_ts2, start = c(2020, 167), end = c(2020, 306))
+data_between_agr_r <- aggregate(data.between_r, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(data_between_agr_r, xlab = "Temps", ylab = "les déplacements vers les magasins de détails et de loisir (%)", main = "Période pause entre les deux confinements")
+abline(h = 0, col = "red", lty = 2)
+
+conf2_r <- window(residential_ts2, start = c(2020, 306), end = c(2021, 160))
+conf2_r_agr <- aggregate(conf2_r, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(conf2_r_agr, xlab = "Temps", ylab = "les déplacements vers les magasins de détails et de loisir (%)", main = "Deuxième confinement")
+abline(h = 0, col = "red", lty = 2)
+```
+
 
 ```{r ts_workplaces}
 # Solène sur la VAR = workplaces
