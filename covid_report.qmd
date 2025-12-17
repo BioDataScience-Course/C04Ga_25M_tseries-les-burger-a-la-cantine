@@ -42,9 +42,6 @@ SciViews::R("ts", lang = "fr")
 covid <- read("data/mobility_wallonia.rds")
 # Un remaniement des données est nécessaire pour renommer les variables de façon plus simple à utiliser
 covid <- srename(covid, retail_and_recreation_percent_change_from_baseline = retail_recreation,
-  grocery_and_pharmacy_percent_change_from_baseline = grocery_pharmacy,
-  parks_percent_change_from_baseline = parks,
-  transit_stations_percent_change_from_baseline = transit,
   workplaces_percent_change_from_baseline = workplaces,
   residential_percent_change_from_baseline = residential)
 # visualisation des données telles quelles
