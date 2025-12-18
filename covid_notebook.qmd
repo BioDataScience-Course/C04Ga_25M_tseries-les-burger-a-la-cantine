@@ -20,7 +20,7 @@ lang: fr
 
 <!--% Rédigez une courte introduction de 3 ou 5 phrases qui présente vos données. Ajoutez une phrase de but. Vous devez citer la bibliographie en utilisant le formatage Markdown ad hoc et en incluant votre référence au format bibtex dans le fichier references.bib. -->
 
-Lors de la pandémie Covid-2019, des mesures ont été prises sur les différentes habitudes de déplacement de la population. Ces données ont été récoltées en Belgique à partir du 15 février 2020 et jusqu'au 15 octobre 2022. Les milieux de fréquentation renseignés sont les commerces de détail et loisirs, les commerces d'alimentation et pharmacies, les lieux de résidence, les parcs ainsi que les lieux de travail.
+Lors de la pandémie Covid-2019, des mesures ont été prises sur les différentes habitudes de déplacement de la population. Ces données ont été récoltées en Wallonie à partir du 15 février 2020 et jusqu'au 15 octobre 2022. Les milieux de fréquentation renseignés sont les commerces de détail et loisirs, les commerces d'alimentation et pharmacies, les lieux de résidence, les parcs ainsi que les lieux de travail.
 
 Dans ce rapport, nous allons donc comparer les séries concernant les lieux de travail, les lieux de résidences et les magasins de détail et loisirs. Ces analyses permettront de mettre en évidence l'impact des restrictions sanitaires mises en place lors de la pandémie sur la fréquentation sur la fréquentation des différents lieux étudiés.
 

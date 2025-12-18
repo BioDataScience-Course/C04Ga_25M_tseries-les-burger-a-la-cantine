@@ -15,7 +15,7 @@ lang: fr
 ## Introduction
 
 <!--% Rédigez l'introduction de ce rapport.-->
-En 2020, le SARS-COV-2 a provoqué une pandémie mondiale. Ce virus a causé une maladie entraînant des syndrome respiratoires aigus sévères. Au cours de cette pandémie, les autorités publiques ont instauré différents confinements ainsi que des restrictions sanitaires qui ont notamment influencé la mobilité de la population belge. Des données sur la mobilité en Belgique ont été recensées à partir de février 2020 et jusqu'en octobre 2022. Le jeu de données correspondant contient les niveaux de fréquentations de différents lieux tels que les commerces de détails et de loisirs, les commerces d'alimentation et pharmacies, les parcs, les lieux de résidences et les lieux de travail.
+En 2020, le SARS-COV-2 a provoqué une pandémie mondiale. Ce virus a causé une maladie entraînant des syndrome respiratoires aigus sévères. Au cours de cette pandémie, les autorités publiques ont instauré différents confinements ainsi que des restrictions sanitaires qui ont notamment influencé la mobilité de la population wallonne Des données sur la mobilité en Wallonie ont été recensées à partir de février 2020 et jusqu'en octobre 2022. Le jeu de données correspondant contient les niveaux de fréquentations de différents lieux tels que les commerces de détails et de loisirs, les commerces d'alimentation et pharmacies, les parcs, les lieux de résidences et les lieux de travail.
 
 ## But
 
@@ -31,140 +31,227 @@ L'analyse est réalisée avec la SciViews Box 2023 dans Saturn Cloud (Linux), ut
 ## Résultats
 
 <!--% Présentez les analyses les plus pertinents que vous avez sélectionnés. Structurez la section en partie avec des titres explicites de niveau trois.-->
-```{r setup}
-# Configuration de l'environnement
-SciViews::R("ts", lang = "fr")
-```
 ```{r importation}
-# Importation des données
-# Anaïs
 SciViews::R("ts", lang = "fr")
+library(gridExtra)
+library(png)
+library(grid)
 covid <- read("data/mobility_wallonia.rds")
-# Un remaniement des données est nécessaire pour renommer les variables de façon plus simple à utiliser
 covid <- srename(covid, retail_and_recreation_percent_change_from_baseline = retail_recreation,
   workplaces_percent_change_from_baseline = workplaces,
   residential_percent_change_from_baseline = residential)
-# visualisation des données telles quelles
-skimr::skim(covid)
 ```
-# Les différentes suites temporelles
+**Les différentes suites temporelles**
 ```{r retail_and_recreation_ts}
+par(mfrow = c(3, 1), mar = c(2.2, 4, 1.2, 0.5), oma = c(2.5, 0, 2.5, 0), cex = 0.75)
 mobw <- covid
 mobw$weekdays <- weekdays(as.POSIXct(mobw$date))
 mobw[mobw$weekdays == "Saturday" | mobw$weekdays == "Sunday" , 2:7] <- NA
-retail_recreation_ts <- ts(mobw$retail_recreation, start = c(2020, 46), frequency = 365)
-retail_recreation_ts2 <- aggregate(retail_recreation_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(retail_recreation_ts2, ylab = "Fréquentation des magasins de détail et loisirs", xlab = "Temps")
+retail_recreation_ts <-ts(mobw$retail_recreation, start = c(2020, 46), frequency = 365)
+retail_recreation_ts2 <-aggregate(retail_recreation_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(retail_recreation_ts2, ylab = "Commerces")
+residential_ts <-ts(mobw$residential, start = c(2020, 46), frequency = 365)
+residential_ts2 <-aggregate(residential_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(residential_ts2, ylab = "Résidences")
+workplaces_ts <-ts(mobw$workplaces, start = c(2020, 46), frequency = 365)
+workplaces_ts2 <-aggregate(workplaces_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
+plot(workplaces_ts2, ylab = "Lieux de travail")
+mtext("Mobilité hebdomadaire (jours de semaine uniquement)", side = 3, outer = TRUE, line = 1, cex = 1)
+mtext("Temps", side = 1, outer = TRUE, line = 1.2, cex = 0.8)
 ```
-Ce graphique révèle une chute drastique de la fréquentation des commerces de détail et loisirs à -80% lors du premier confinement (mars 2020), suivie d'une récupération progressive avec de fortes fluctuations durant 2020-2021 reflétant l'alternance des restrictions sanitaires. À partir de mi-2021, la fréquentation se stabilise au-dessus des niveaux pré-covid (+10 à +20%), suggérant un effet de rattrapage de la consommation différée durant la pandémie.
-```{r ts_residential}
-residential_ts2 <- aggregate(ts(mobw$residential, start = c(2020, 46), frequency = 365), 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(residential_ts2, ylab = "Pourcentage de déplacement vers les lieux de résidences", xlab = "Temps", main = "Mobilité vers les lieux de résidences semaine par semaine en omettant les weekends")
-```
-Ce graphique montre une augmentation spectaculaire de la présence résidentielle atteignant +28% lors du premier confinement (mars 2020), reflétant les obligations de rester à domicile et le télétravail massif. La présence diminue progressivement mais reste systématiquement positive (+5 à +15%) durant 2021-2022, témoignant d'un changement structurel durable où le télétravail et la vie à domicile se sont normalisés même après la levée des restrictions sanitaires.
-```{r ts_workplaces}
-workplaces_ts <- ts(mobw$workplaces, start = c(2020, 46), frequency = 365)
-workplaces_ts2 <- aggregate(workplaces_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(workplaces_ts2, ylab = "Pourcentage de déplacement vers les lieux de travails")
-```
-Ce graphique illustre une chute drastique de la fréquentation des lieux de travail à -70% lors du premier confinement (mars 2020), conséquence de l'obligation généralisée du télétravail. La récupération est progressive avec de fortes fluctuations durant 2020-2021 (-20 à -50%), et même en 2022, la fréquentation oscille entre -40% et -10%, témoignant d'un changement structurel où le télétravail hybride s'est normalisé et ne permet plus un retour complet aux niveaux pré-pandémiques.
+Cette compilation de graphique montre l'évolution de la mobilité du 15 février 2020 au 15 octobre 2022 pour trois lieux différents. Chaque graphique compare la mobilité observée lors des années pré-covid représentée par la ligne 0 aux différentes années représentées. Le premier graphique représente les commerces de détails et loisirs, le second les lieux de résidence et le dernier les lieux de travail. 
 
-# Analyse des différentes suites temporelles
+Le premier graphe révèle une chute drastique de la fréquentation des commerces de détail et loisirs à -80% lors du premier confinement (mars 2020), suivie d'une récupération progressive avec de fortes fluctuations durant 2020-2021. À partir de mi-2021, la fréquentation se stabilise au-dessus des niveaux pré-covid (+10 à +20%).
+
+Le second graphe montre une augmentation spectaculaire de la présence résidentielle atteignant +28% lors du premier confinement (mars 2020). La présence diminue progressivement mais reste systématiquement positive (+5 à +15%) durant 2021-2022.
+
+Ce dernier graphique illustre une chute drastique de la fréquentation des lieux de travail à -70% lors du premier confinement (mars 2020). La récupération est progressive avec de fortes fluctuations durant 2020-2021 (-20 à -50%), et même en 2022, la fréquentation oscille entre -40% et -10%.
+
+**Analyse des différentes suites temporelles**
 ```{r rr_ confinement}
 conf_rr <- window(retail_recreation_ts, start = c(2020, 77), end = c(2021, 160))
 conf_aggregate <- aggregate(conf_rr, 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(conf_aggregate, xlab = "Temps", ylab = "Fréquentation des magasins de détails et de loisir (%)", main = "Période de confinement: Jours de la semaine agrégés")
-abline(h = 0, col = "red", lty = 2)
-
-acf(conf_aggregate, main = "ACF de la série ST confinement")
-
+png("graph1.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
+plot(conf_aggregate, xlab = "Temps", ylab = "Fréquentation des commerces (%)", lwd = 3)
+abline(h = 0, col = "red", lty = 2, lwd = 3)
+invisible(dev.off())
+png("graph2.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
+acf(conf_aggregate, lwd = 3, main = "Test ACF", xlab = "Décalage", ylab = "Autocorrélation")
+invisible(dev.off())
+png("graph3.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
 set.seed(456)
 conf_rr_trend <- trend.test(conf_aggregate, R = 999)
-plot(conf_rr_trend, main = "Tendance générale de la série ST confinement")
-
-conf_rr_local <- local.trend(conf_aggregate)
-plot(conf_rr_local, main = "Tendances locales - Période de confinement", ylab = "Fréquentation magasin de détail et loisir")
+plot(conf_rr_trend)
+invisible(dev.off())
+png("graph4.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
+conf_rr_local <- local.trend(conf_aggregate, xlab = "Temps", main = "Graphe de la tendance locale", ylab = "Sommes cumulées")
+invisible(dev.off())
+grid.newpage()
+grid.text("Retail & loisirs - COVID", x = 0.5, y = 0.98, gp = gpar(fontsize = 20, fontface = "bold"))
+pushViewport(viewport(y = 0.48, height = 0.92, layout = grid.layout(2, 2)))
+grid.raster(readPNG("graph1.png"), vp = viewport(layout.pos.row = 1, layout.pos.col = 1))
+grid.raster(readPNG("graph2.png"), vp = viewport(layout.pos.row = 1, layout.pos.col = 2))
+grid.raster(readPNG("graph3.png"), vp = viewport(layout.pos.row = 2, layout.pos.col = 1))
+grid.raster(readPNG("graph4.png"), vp = viewport(layout.pos.row = 2, layout.pos.col = 2))
 ```
-Durant la période de confinement (mars 2020 - juin 2021), l'ensemble des graphiques (série agrégée, acf, test de tendance et tendances locales) révèle une évolution en forme de "U" de la fréquentation des commerces de détail et loisirs : chute brutale à -80% début 2020, récupération progressive vers 0% à l'été 2020, puis stabilisation autour de -30% durant 2021. Le test acf montre des autocorrélations significatives décroissantes aux premiers lags, indiquant une dépendance temporelle forte liée aux mesures sanitaires successives, tandis que le test de tendance confirme une amélioration globale significative (ligne rouge croissante) malgré les fluctuations, et les tendances locales révèlent un minimum atteint en avril 2020 suivi d'une récupération soutenue jusqu'à mi-2020 avant une stagnation relative reflétant l'alternance des restrictions.
+Durant la période de confinement (mars 2020 - juin 2021), l'ensemble des graphiques (série agrégée, acf, test de tendance et tendances locales) révèle une évolution en forme de "U" de la fréquentation des commerces de détail et loisirs : chute brutale à -80% début 2020, récupération progressive vers 0% à l'été 2020, puis stabilisation autour de -30% durant 2021. Le test acf montre des autocorrélations significatives décroissantes aux premiers lags, indiquant une dépendance temporelle forte, tandis que le test de tendance confirme une amélioration globale significative (ligne rouge croissante) malgré les fluctuations, et les tendances locales révèlent un minimum atteint en avril 2020 suivi d'une récupération soutenue jusqu'à mi-2020 avant une stagnation relative.
+
 ```{r rr_ postconfinement}
 after_rr <- window(retail_recreation_ts, start = c(2021, 161), end = c(2022, 288))
 after_aggregate <- aggregate(after_rr, 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(after_aggregate, xlab = "Temps", ylab = "Fréquenatation des magasins de détails et de loisir (%)", main = "Période post confinement: Jours de la semaine agrégés")
+png("graph1.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
+plot(after_aggregate, xlab = "Temps", ylab = "Fréquentation des commerces (%)", lwd = 3)
 abline(h = 0, col = "red", lty = 2)
-
-acf(after_aggregate, main = "ACF de la série ST post confinement")
-
+invisible(dev.off())
+png("graph2.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
+acf(after_aggregate, main = "Test ACF", xlab = "Décalage", ylab = "Autocorrélation", lwd = 3)
+invisible(dev.off())
+png("graph3.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
 set.seed(897)
 after_rr_trend <- trend.test(after_aggregate, R = 999)
-plot(after_rr_trend, main = "Tendance générale de la série ST Post confinement")
-
-after_rr_local <- local.trend(after_aggregate)
-plot(after_rr_local, main = "Tendances locales - Période post-confinement")
+plot(after_rr_trend)
+invisible(dev.off())
+png("graph4.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
+after_rr_local <- local.trend(after_aggregate, xlab = "Temps", main = "Graphe de la tendance locale", ylab = "Sommes cumulées")
+invisible(dev.off())
+grid.text("Retail & loisirs - post-COVID", x = 0.5, y = 0.98, gp = gpar(fontsize = 20, fontface = "bold"))
+pushViewport(viewport(y = 0.48, height = 0.92, layout = grid.layout(2, 2)))
+grid.raster(readPNG("graph1.png"), vp = viewport(layout.pos.row = 1, layout.pos.col = 1))
+grid.raster(readPNG("graph2.png"), vp = viewport(layout.pos.row = 1, layout.pos.col = 2))
+grid.raster(readPNG("graph3.png"), vp = viewport(layout.pos.row = 2, layout.pos.col = 1))
+grid.raster(readPNG("graph4.png"), vp = viewport(layout.pos.row = 2, layout.pos.col = 2))
 ```
-Durant la période post-confinement (juin 2021 - octobre 2022), l'ensemble des graphiques (série agrégée, acf, test de tendance et tendances locales) révèle une fréquentation des commerces oscillant fortement entre -5% et +25%, suivie d'une stabilisation autour de +10 à +15%. Le test acf montre des autocorrélations majoritairement non-significatives indiquant l'absence de structure temporelle forte, tandis que le test de tendance et les tendances locales révèlent un pic de fréquentation exceptionnellement élevé (+90) à l'été 2021 reflétant un effet de rattrapage de la consommation différée, suivi d'une décroissance vers des niveaux proches de zéro en 2022, suggérant une normalisation progressive des comportements d'achat avec toutefois une variabilité persistante témoignant de nouveaux patterns de consommation post-pandémiques.
+Durant la période post-confinement (juin 2021 - octobre 2022), l'ensemble des graphiques (série agrégée, acf, test de tendance et tendances locales) révèle une fréquentation des commerces oscillant fortement entre -5% et +25%, suivie d'une stabilisation autour de +10 à +15%. Le test acf montre des autocorrélations majoritairement non-significatives indiquant l'absence de structure temporelle forte, tandis que le test de tendance et les tendances locales révèlent un pic de fréquentation exceptionnellement élevé (+90) à l'été 2021, suivi d'une décroissance vers des niveaux proches de zéro en 2022.
+
 ```{r r_ confinement}
-avant <- window(residential_ts2, start = c(2020, 11), end = c(2021, 23))
-plot(avant, xlab = "Temps", ylab = "Variation dans la présence à la maison (%)", main = "Période de confinement: Jours de la semaine agrégés sans les weekends")
-abline(h = 0, col = "red", lty = 2)
-
-acf(avant, main = "ACF de la série confinement")
-
+avant_ <- window(residential_ts, start = c(2020, 77), end = c(2021, 288))
+avant <- aggregate(avant_, 52, FUN = collapse::fmean, ts.eps = 1/52)
+png("graph1.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
+plot(avant, xlab = "Temps", ylab = "Fréquentation des résidences (%)", lwd = 3)
+invisible(dev.off())
+png("graph2.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
+acf(avant, main = "Test ACF", xlab = "Décalage", ylab = "Autocorrélation", lwd = 3)
+invisible(dev.off())
+png("graph3.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
 set.seed(123)
 avant_tg <- trend.test(avant, R = 999)
-plot(avant_tg, main = "Tendance générale de la série confinement")
-
-avant_tl <- local.trend(avant)
-plot(avant_tl, main = "Tendances locales de la période de confinement")
+plot(avant_tg)
+invisible(dev.off())
+png("graph4.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
+avant_tl <- local.trend(avant, xlab = "Temps", main = "Graphe de la tendance locale", ylab = "Sommes cumulées")
+invisible(dev.off())
+grid.newpage()
+grid.text("Résidences - COVID", x = 0.5, y = 0.98, gp = gpar(fontsize = 20, fontface = "bold"))
+pushViewport(viewport(y = 0.48, height = 0.92, layout = grid.layout(2, 2)))
+grid.raster(readPNG("graph1.png"), vp = viewport(layout.pos.row = 1, layout.pos.col = 1))
+grid.raster(readPNG("graph2.png"), vp = viewport(layout.pos.row = 1, layout.pos.col = 2))
+grid.raster(readPNG("graph3.png"), vp = viewport(layout.pos.row = 2, layout.pos.col = 1))
+grid.raster(readPNG("graph4.png"), vp = viewport(layout.pos.row = 2, layout.pos.col = 2))
 ```
-Durant la période de confinement (mars 2020 - juin 2021), l'ensemble des graphiques (série agrégée, acf, test de tendance et tendances locales) révèle une augmentation spectaculaire de la présence résidentielle atteignant un pic de +28% au début du premier confinement, suivie d'une diminution progressive oscillant entre +20% et +5% reflétant l'alternance des restrictions sanitaires. Le test acf montre des autocorrélations significatives décroissantes aux premiers lags indiquant une forte dépendance temporelle, tandis que le test de tendance (cusum atteignant +120 en avril 2020) et les tendances locales confirment un pic maximal au printemps 2020 suivi d'une décroissance continue mais la présence reste systématiquement positive, témoignant de l'impact durable du télétravail et des restrictions de déplacement même durant les périodes d'assouplissement.
+Durant la période de confinement (mars 2020 - juin 2021), l'ensemble des graphiques (série agrégée, acf, test de tendance et tendances locales) révèle une augmentation spectaculaire de la présence résidentielle atteignant un pic de +28% au début du premier confinement, suivie d'une diminution progressive oscillant entre +20% et +5%. Le test acf montre des autocorrélations significatives décroissantes aux premiers lags indiquant une forte dépendance temporelle, tandis que le test de tendance (cusum atteignant +120 en avril 2020) et les tendances locales confirment un pic maximal au printemps 2020 suivi d'une décroissance continue mais la présence reste systématiquement positive.
+
 ```{r r_ postconfinement1}
-# Décomposition de la série: période après les 2 confinements (du 9 juin 2021 à la fin de 2022) + graphique + autocorrélation + tendance générale + tendance locale
-après <- window(residential_ts2, start = c(2021, 23), end = c(2022, 41))
-plot(après, xlab = "Temps", ylab = "Variation dans la présence à la maison (%)", main = "Période de post confinement: Jours de la semaine agrégés sans les weekends")
-abline(h = 0, col = "red", lty = 2)
-
-acf(après, main = "ACF de la série post confinement")
-
+après_ <- window(residential_ts, start = c(2020, 161), end = c(2021, 288))
+après <- aggregate(après_, 52, FUN = collapse::fmean, ts.eps = 1/52)
+png("graph1.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
+plot(après, xlab = "Temps", ylab = "Fréquentation des résidences (%)", lwd = 3)
+invisible(dev.off())
+png("graph2.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
+acf(après, main = "Test ACF", xlab = "Décalage", ylab = "Autocorrélation", lwd = 3)
+invisible(dev.off())
+png("graph3.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
 set.seed(371)
 après_tg <- trend.test(après, R = 999)
-plot(après_tg, main = "Tendance générale de la série Post confinement")
-
-après_tl <- local.trend(après)
-plot(après_tl, main = "Tendances locales de la période post-confinement")
+plot(après_tg)
+invisible(dev.off())
+png("graph4.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
+après_tl <- local.trend(après, xlab = "Temps", main = "Graphe de la tendance locale", ylab = "Sommes cumulées")
+invisible(dev.off())
+grid.newpage()
+grid.text("Résidences - post-COVID", x = 0.5, y = 0.98, gp = gpar(fontsize = 20, fontface = "bold"))
+pushViewport(viewport(y = 0.48, height = 0.92, layout = grid.layout(2, 2)))
+grid.raster(readPNG("graph1.png"), vp = viewport(layout.pos.row = 1, layout.pos.col = 1))
+grid.raster(readPNG("graph2.png"), vp = viewport(layout.pos.row = 1, layout.pos.col = 2))
+grid.raster(readPNG("graph3.png"), vp = viewport(layout.pos.row = 2, layout.pos.col = 1))
+grid.raster(readPNG("graph4.png"), vp = viewport(layout.pos.row = 2, layout.pos.col = 2))
 ```
 Lors de la période suivant le confinement (juin 2021 à octobre 2022), les différents graphiques (série agrégée, acf, test de tendance et tendances locales) montrent une fréquentation du domicile plus récurrente que la moyenne (jusqu'à +40%) mais qui a nettement diminué que lors du confinement. Le test permettant de voir l'autocorrélation n'est pas significative ce qui montre une absence de structure temporelle. Cependant les tests de tendance révèlent que les résidences ont connues un pic de fréquentation au début de l'année 2022 (+40%).
+
 ```{r w_ confinement}
-workplaces_ts <- ts(mobw$workplaces, start = c(2020, 46), frequency = 365)
 conf <- window(workplaces_ts, start = c(2020, 78), end = c(2021, 160))
 conf_agr <- aggregate(conf, 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(conf_agr, xlab = "Temps", ylab = "Variation dans la présence au travail (%)", main = "Période de confinement: Jours de la semaine agrégés")
-abline(h = 0, col = "red", lty = 2)
-
-acf(conf_agr, main = "ACF de la série ST confinement")
-
+png("graph1.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
+plot(conf_agr, xlab = "Temps", ylab = "Fréquentation des lieux de travail (%)", lwd = 3)
+invisible(dev.off())
+png("graph2.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
+acf(conf_agr, main = "Test ACF", xlab = "Décalage", ylab = "Autocorrélation", lwd = 3)
+invisible(dev.off())
+png("graph3.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
 set.seed(21)
 tt_conf <- trend.test(conf_agr, R = 999)
-plot(tt_conf, main = "Tendance générale de la série ST confinement")
-
-lt_conf <- local.trend(conf_agr)
-plot(lt_conf, main = "Tendances locales - Période de confinement")
+plot(tt_conf)
+invisible(dev.off())
+png("graph4.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
+lt_conf <- local.trend(conf_agr, xlab = "Temps", main = "Graphe de la tendance locale", ylab = "Sommes cumulées")
+invisible(dev.off())
+grid.newpage()
+grid.text("Lieux de travail - COVID", x = 0.5, y = 0.98, gp = gpar(fontsize = 20, fontface = "bold"))
+pushViewport(viewport(y = 0.48, height = 0.92, layout = grid.layout(2, 2)))
+grid.raster(readPNG("graph1.png"), vp = viewport(layout.pos.row = 1, layout.pos.col = 1))
+grid.raster(readPNG("graph2.png"), vp = viewport(layout.pos.row = 1, layout.pos.col = 2))
+grid.raster(readPNG("graph3.png"), vp = viewport(layout.pos.row = 2, layout.pos.col = 1))
+grid.raster(readPNG("graph4.png"), vp = viewport(layout.pos.row = 2, layout.pos.col = 2))
 ```
 En ce qui concerne les lieux de travail lors du confinement (mars 2020 - juin 2021), une baisse de leur fréquentation peut être notée. On a jusqu'à -250% de fréquentation pour ces lieux. Le test acf indique que la plupart des pics sont non-significative ce qui indique une faible dépendance temporelle. Par contre, la tendance baisse jusqu'au milieu de l'année 2020 (en dessous de -250%) pour ensuite remonter petit à petit et atteindre -50%.
+
 ```{r r_ postconfinement2}
-workplaces_ts <- ts(mobw$workplaces, start = c(2020, 46), frequency = 365)
 after <- window(workplaces_ts, start = c(2021, 160), end = c(2022, 288))
 after_agr <- aggregate(after, 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(after_agr, xlab = "Temps", ylab = "Variation dans la présence au travail (%)", main = "Période post confinement: Jours de la semaine agrégés")
-abline(h = 0, col = "red", lty = 2)
-
-acf(after_agr, main = "ACF de la série ST post confinement")
-
+png("graph1.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
+plot(after_agr, xlab = "Temps", ylab = "Fréquentation des lieux de travail (%)", lwd = 3)
+invisible(dev.off())
+png("graph2.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
+acf(after_agr, main = "Test ACF", xlab = "Décalage", ylab = "Autocorrélation", lwd = 3)
+invisible(dev.off())
+png("graph3.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
 set.seed(210)
 tt_after <- trend.test(after_agr, R = 999)
-plot(tt_after, main = "Tendance générale de la série ST Post confinement")
-
-lt_after <- local.trend(after_agr)
-plot(lt_after, main = "Tendances locales - Période post-confinement")
+plot(tt_after)
+invisible(dev.off())
+png("graph4.png", width = 2400, height = 1800, res = 300)
+par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
+lt_after <- local.trend(after_agr, xlab = "Temps", main = "Graphe de la tendance locale", ylab = "Sommes cumulées")
+invisible(dev.off())
+grid.newpage()
+grid.text("Lieux de travail - post-COVID", x = 0.5, y = 0.98, gp = gpar(fontsize = 20, fontface = "bold"))
+pushViewport(viewport(y = 0.48, height = 0.92, layout = grid.layout(2, 2)))
+grid.raster(readPNG("graph1.png"), vp = viewport(layout.pos.row = 1, layout.pos.col = 1))
+grid.raster(readPNG("graph2.png"), vp = viewport(layout.pos.row = 1, layout.pos.col = 2))
+grid.raster(readPNG("graph3.png"), vp = viewport(layout.pos.row = 2, layout.pos.col = 1))
+grid.raster(readPNG("graph4.png"), vp = viewport(layout.pos.row = 2, layout.pos.col = 2))
 ```
 De mars 2020 à juin 2021, après les confinements, les graphiques indique encore une présence sur les lieux de travail moins fréquente que la moyenne malgré un pic en avril 2022. Le test d'ACF n'est pas significatif tandis que la tendance générale est à l'augmentation. La tendance locale quant à elle montre une chute de la fréquentation des lieux de travail jusqu'en 2022 (plus de -100%) pour ensuite remonter au dessus de la fréquence moyenne en avril 2022. Cela est suivie d'une légère descente en juin 2022 (-50%) pour finir par remonter jusqu'à la moyenne en août 2022.
 
