@@ -132,7 +132,7 @@ grid.raster(readPNG("graph4.png"), vp = viewport(layout.pos.row = 2, layout.pos.
 Durant la période post-confinement (juin 2021 - octobre 2022), l'ensemble des graphiques (série agrégée, acf, test de tendance et tendances locales) révèle une fréquentation des commerces oscillant fortement entre -5% et +25%, suivie d'une stabilisation autour de +10 à +15%. Le test acf montre des autocorrélations majoritairement non-significatives indiquant l'absence de structure temporelle forte, tandis que le test de tendance et les tendances locales révèlent un pic de fréquentation exceptionnellement élevé (+90) à l'été 2021, suivi d'une décroissance vers des niveaux proches de zéro en 2022.
 
 ```{r r_ confinement}
-avant_ <- window(residential_ts, start = c(2020, 77), end = c(2021, 288))
+avant_ <- window(residential_ts, start = c(2020, 77), end = c(2021, 160))
 avant <- aggregate(avant_, 52, FUN = collapse::fmean, ts.eps = 1/52)
 png("graph1.png", width = 2400, height = 1800, res = 300)
 par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
@@ -163,7 +163,7 @@ grid.raster(readPNG("graph4.png"), vp = viewport(layout.pos.row = 2, layout.pos.
 Durant la période de confinement (mars 2020 - juin 2021), l'ensemble des graphiques (série agrégée, acf, test de tendance et tendances locales) révèle une augmentation spectaculaire de la présence résidentielle atteignant un pic de +28% au début du premier confinement, suivie d'une diminution progressive oscillant entre +20% et +5%. Le test acf montre des autocorrélations significatives décroissantes aux premiers lags indiquant une forte dépendance temporelle, tandis que le test de tendance (cusum atteignant +120 en avril 2020) et les tendances locales confirment un pic maximal au printemps 2020 suivi d'une décroissance continue mais la présence reste systématiquement positive.
 
 ```{r r_ postconfinement1}
-après_ <- window(residential_ts, start = c(2020, 161), end = c(2021, 288))
+après_ <- window(residential_ts, start = c(2021, 161), end = c(2022, 288))
 après <- aggregate(après_, 52, FUN = collapse::fmean, ts.eps = 1/52)
 png("graph1.png", width = 2400, height = 1800, res = 300)
 par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
@@ -191,10 +191,10 @@ grid.raster(readPNG("graph2.png"), vp = viewport(layout.pos.row = 1, layout.pos.
 grid.raster(readPNG("graph3.png"), vp = viewport(layout.pos.row = 2, layout.pos.col = 1))
 grid.raster(readPNG("graph4.png"), vp = viewport(layout.pos.row = 2, layout.pos.col = 2))
 ```
-Lors de la période suivant le confinement (juin 2021 à octobre 2022), les différents graphiques (série agrégée, acf, test de tendance et tendances locales) montrent une fréquentation du domicile plus récurrente que la moyenne (jusqu'à +40%) mais qui a nettement diminué que lors du confinement. Le test permettant de voir l'autocorrélation n'est pas significative ce qui montre une absence de structure temporelle. Cependant les tests de tendance révèlent que les résidences ont connues un pic de fréquentation au début de l'année 2022 (+40%).
+Lors de la période suivant le confinement (juin 2021 à octobre 2022), les différents graphiques (série agrégée, acf, test de tendance et tendances locales) montrent une fréquentation du domicile plus récurrente que la moyenne (jusqu'à +14%) mais qui a nettement diminué que lors du confinement. Le test permettant de voir l'autocorrélation n'est pas significative ce qui montre une absence de structure temporelle. Cependant les tests de tendance révèlent que les résidences ont connues un pic de fréquentation au début de l'année 2022 (+14%).
 
 ```{r w_ confinement}
-conf <- window(workplaces_ts, start = c(2020, 78), end = c(2021, 160))
+conf <- window(workplaces_ts, start = c(2020, 77), end = c(2021, 160))
 conf_agr <- aggregate(conf, 52, FUN = collapse::fmean, ts.eps = 1/52)
 png("graph1.png", width = 2400, height = 1800, res = 300)
 par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
@@ -222,10 +222,10 @@ grid.raster(readPNG("graph2.png"), vp = viewport(layout.pos.row = 1, layout.pos.
 grid.raster(readPNG("graph3.png"), vp = viewport(layout.pos.row = 2, layout.pos.col = 1))
 grid.raster(readPNG("graph4.png"), vp = viewport(layout.pos.row = 2, layout.pos.col = 2))
 ```
-En ce qui concerne les lieux de travail lors du confinement (mars 2020 - juin 2021), une baisse de leur fréquentation peut être notée. On a jusqu'à -250% de fréquentation pour ces lieux. Le test acf indique que la plupart des pics sont non-significative ce qui indique une faible dépendance temporelle. Par contre, la tendance baisse jusqu'au milieu de l'année 2020 (en dessous de -250%) pour ensuite remonter petit à petit et atteindre -50%.
+En ce qui concerne les lieux de travail lors du confinement (mars 2020 - juin 2021), une baisse de leur fréquentation peut être notée. On a jusqu'à -70% de fréquentation pour ces lieux. Le test acf indique que la plupart des pics sont non-significative ce qui indique une faible dépendance temporelle. Par contre, la tendance baisse jusqu'au milieu de l'année 2020 (en dessous de -70%) pour ensuite remonter petit à petit et atteindre -10%.
 
 ```{r r_ postconfinement2}
-after <- window(workplaces_ts, start = c(2021, 160), end = c(2022, 288))
+after <- window(workplaces_ts, start = c(2021, 161), end = c(2022, 288))
 after_agr <- aggregate(after, 52, FUN = collapse::fmean, ts.eps = 1/52)
 png("graph1.png", width = 2400, height = 1800, res = 300)
 par(cex.main = 2.2, cex.lab = 1.8, cex.axis = 1.6, mar = c(6, 6, 5, 3), lwd = 3)
@@ -253,13 +253,13 @@ grid.raster(readPNG("graph2.png"), vp = viewport(layout.pos.row = 1, layout.pos.
 grid.raster(readPNG("graph3.png"), vp = viewport(layout.pos.row = 2, layout.pos.col = 1))
 grid.raster(readPNG("graph4.png"), vp = viewport(layout.pos.row = 2, layout.pos.col = 2))
 ```
-De mars 2020 à juin 2021, après les confinements, les graphiques indique encore une présence sur les lieux de travail moins fréquente que la moyenne malgré un pic en avril 2022. Le test d'ACF n'est pas significatif tandis que la tendance générale est à l'augmentation. La tendance locale quant à elle montre une chute de la fréquentation des lieux de travail jusqu'en 2022 (plus de -100%) pour ensuite remonter au dessus de la fréquence moyenne en avril 2022. Cela est suivie d'une légère descente en juin 2022 (-50%) pour finir par remonter jusqu'à la moyenne en août 2022.
+De juin 2021 à octobre 2022, après les confinements, les graphiques indique encore une présence sur les lieux de travail moins fréquente que la moyenne malgré un pic en avril 2022. Le test d'ACF n'est pas significatif tandis que la tendance générale est à l'augmentation. La tendance locale quant à elle montre une chute de la fréquentation des lieux de travail jusqu'en 2022 (plus de -50%) pour ensuite remonter au dessus de la fréquence moyenne en avril 2022 (-40%). Cela est suivie d'une légère descente en juin 2022 (-50%) pour finir par remonter jusqu'à la moyenne en août 2022.
 
 ## Discussion et Conclusion
 
 <!--% En tenant compte du but de votre carnet de notes et de vos résultats, discutez de résultats et proposez des conclusions à votre analyse en 5 à 10 phrases. -->
 La pandémie du Covid-19 a eu un profond impact sur divers domaines, pendant les confinements et également par après.
-En ce qui concerne les magasins de détails et de loisir, il y a eu une énorme chute (-80% en mars 2020) de leur fréquentation pendant les 2 confinements. Cette fréquentation a ensuite été revue à la hausse, dépassant même les seuils initiaux. Cette variation de la fréquentation nous montre que la population wallonne a une forte résilience et a développé un besoin de compensation (+90% en été 2021) envers ce type de commerce une fois que la crise fut finie.
-Les séries sur les lieux de travail et sur les résidences sont complémentaires ; lorsque l'une montre une fréquentation à la baisse, il est fort probable que l'autre montre une augmentation. Il y a un pic (+28%) de présence résidentielle pendant le confinement puis cette fréquentation reste positive : il y a une adoption du télétravail dans de nombreux secteurs lorsque cela est possible. Tandis que du côté des lieux de travail, il y a une récupération de la fréquentation (on passe de -40% à -10% en 2022) mais elle reste incomplète : le télétravail reste en place, de nombreuses entreprises optent pour un travail hybride (en partie présentiel, en partie télétravail).
+En ce qui concerne les magasins de détails et de loisir, il y a eu une énorme chute (-80% en mars 2020) de leur fréquentation pendant les 2 confinements. Cette fréquentation a ensuite été revue à la hausse, dépassant même les seuils initiaux. Cette variation de la fréquentation nous montre que la population wallonne a une forte résilience et a développé un besoin de compensation (+20% en été 2021) envers ce type de commerce une fois que la crise fut finie.
+Les séries sur les lieux de travail et sur les résidences sont complémentaires ; lorsque l'une montre une fréquentation à la baisse, il est fort probable que l'autre montre une augmentation. Il y a un pic (+28%) de présence résidentielle pendant le confinement puis cette fréquentation reste positive : il y a une adoption du télétravail dans de nombreux secteurs lorsque cela est possible. Tandis que du côté des lieux de travail, il y a une récupération de la fréquentation (on passe de -50% à -10% en 2022) mais elle reste incomplète : le télétravail reste en place, de nombreuses entreprises optent pour un travail hybride (en partie présentiel, en partie télétravail).
 Les autocorrélations sont fortes durant le confinement, ce qui démontre l'adoption de ces différents comportements.
 Pour résumer tout ceci, il en va de dire que la population wallonne a subi des changements post-confinement. Elle a dû s'adapter en période de crise et a trouvé de meilleurs moyens de fonctionner, tant au niveau de leur travail, qu'au niveau des loisirs.
