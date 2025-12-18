@@ -178,15 +178,9 @@ residential_ts1 <- aggregate(residential_ts, 52, FUN = collapse::fmean, ts.eps =
 plot(residential_ts1, ylab = "Pourcentage de déplacement vers les lieux de résidences", xlab = "Temps", main = "Mobilité vers les lieux de résidences semaine par semaine")
 
 # La série avec une "moyenne sur la semaine sans compter les weekends"
-residential_ts2 <- aggregate(ts(mobw$residential, start = c(2020, 46), frequency = 365), 52, FUN = collapse::fmean, ts.eps = 1/52)
+r_ts <-ts(mobw$residential, start = c(2020, 46), frequency = 365)
+residential_ts2 <- aggregate(r_ts, 52, FUN = collapse::fmean, ts.eps = 1/52)
 plot(residential_ts2, ylab = "Pourcentage de déplacement vers les lieux de résidences", xlab = "Temps", main = "Mobilité vers les lieux de résidences semaine par semaine en omettant les weekends")
-
-# La série avec une "moyenne sur uniquement les weekends"
-mobww <- covid
-mobww$weekdays <- weekdays(as.POSIXct(mobww$date))
-mobww[mobww$weekdays != "Saturday" & mobww$weekdays != "Sunday" , 2:7] <- NA  
-residential_ts3 <- aggregate(ts(mobww$residential, start = c(2020, 46), frequency = 365), 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(residential_ts3, ylab = "Pourcentage de déplacement vers les lieux de résidences", xlab = "Temps", main = "Mobilité vers les lieux de résidences weekends par weekends")
 ```
 
 Tout d'abord, différentes séries temporelles ont été crées pour la variable "residential". Le premier graphique montre tout le jeu de données au complet, ce qui est peu lisible. Ensuite, les données ont été "aggrégés", c'est à dire qu'une sorte de moyenne par semaine a été faite pour rendre le tout plus lisible. Toujours en gardant cette idée de synthèse, deux autres séries ont été crées. La première ne contient que les semaines sans les weekends donc du lundi au vendredi tandis que la seconde ne contient que les weekends.
@@ -217,8 +211,10 @@ Pour continuer l'analyse de façon plus poussée, il faut choisir une seule sér
 
 ```{r residential_analysis_final}
 # Lucie
+r_ts <-ts(mobw$residential, start = c(2020, 46), frequency = 365)
 # Décomposition de la série: période comprenant les 2 confinements (du 18 mars 2020 au 9 juin 2021) + graphique + autocorrélation + tendance générale + tendance locale
-avant <- window(residential_ts2, start = c(2020, 11), end = c(2021, 23))
+residential_ts3 <- window(r_ts, start = c(2020, 46), end = c(2021, 160))
+avant <- aggregate(residential_ts3, 52, FUN = collapse::fmean, ts.eps = 1/52)
 plot(avant, xlab = "Temps", ylab = "Variation dans la présence à la maison (%)", main = "Période de confinement: Jours de la semaine agrégés sans les weekends")
 abline(h = 0, col = "red", lty = 2)
 
@@ -232,7 +228,8 @@ avant_tl <- local.trend(avant)
 plot(avant_tl, main = "Tendances locales de la période de confinement")
 
 # Décomposition de la série: période après les 2 confinements (du 9 juin 2021 à la fin de 2022) + graphique + autocorrélation + tendance générale + tendance locale
-après <- window(residential_ts2, start = c(2021, 23), end = c(2022, 41))
+residential_ts3 <- window(r_ts, start = c(2021, 161), end = c(2022, 288))
+après <- aggregate(residential_ts3, 52, FUN = collapse::fmean, ts.eps = 1/52)
 plot(après, xlab = "Temps", ylab = "Variation dans la présence à la maison (%)", main = "Période de post confinement: Jours de la semaine agrégés sans les weekends")
 abline(h = 0, col = "red", lty = 2)
 
@@ -251,25 +248,25 @@ Pour correspondre à la variable "workplace", nous allons diviser notre série e
 Tout d'abord, la partie contenant les deux confinements : - Les différents graphiques permettent de voir que la population belge est restée plus souvent à la maison. - L'autocorrélation est non-significative car la plupart des pics ne se situent pas en dehors de l'intervalle de confiance. - La tendance est positive selon les tests de tendance.
 
 Ensuite, pour la période post-confinements : - Les graphiques présentent des oscillations montrant le retour des déplacements (par exemple, le travail) mais le télétravail étant devenu plus fréquents, on reste tout de même plus à la maison. - Le test afc a la majorité des pics situés à l'intérieur de l'enveloppe de confiance donc l'autocorrélation n'est pas significative. - Les tests de tendance montrent une forte variabilité ce qui pourrait s'expliquer par le travail en hybride.
+
 ```{r residential_confinements}
 # Décomposition: période de confinement 1, période entre les deux confinements, et la deuxième période de confinement
 # Découpe de la première partie pour que ce soit cohérent avec les filles
-conf1_r <- window(residential_ts2, start = c(2020, 11), end = c(2020, 14))
+conf1_r <- window(r_ts, start = c(2020, 78), end = c(2020, 167))
+data.between_r <- window(r_ts, start = c(2020, 167), end = c(2020, 307))
+conf2_r <- window(r_ts, start = c(2020, 307), end = c(2021, 160))
+
 conf1_r_agr <- aggregate(conf1_r, 52, FUN = collapse::fmean, ts.eps = 1/52)
+data_between_agr_r <- aggregate(data.between_r, 52, FUN = collapse::fmean, ts.eps = 1/52)
+conf2_r_agr <- aggregate(conf2_r, 52, FUN = collapse::fmean, ts.eps = 1/52)
+
 plot(conf1_r_agr, xlab = "Temps", ylab = "Variation dans les déplacements vers les magasins de détails et de loisir (%)", main = "Premier confinement")
 abline(h = 0, col = "red", lty = 2)
-
-data.between_r <- window(residential_ts2, start = c(2020, 14), end = c(2020, 43))
-data_between_agr_r <- aggregate(data.between_r, 52, FUN = collapse::fmean, ts.eps = 1/52)
 plot(data_between_agr_r, xlab = "Temps", ylab = "les déplacements vers les magasins de détails et de loisir (%)", main = "Période pause entre les deux confinements")
 abline(h = 0, col = "red", lty = 2)
-
-conf2_r <- window(residential_ts2, start = c(2020, 43), end = c(2021, 23))
-conf2_r_agr <- aggregate(conf2_r, 52, FUN = collapse::fmean, ts.eps = 1/52)
-plot(conf2_r_agr, xlab = "Temps", ylab = "les déplacements vers les magasins de détails et de loisir (%)", main = "Deuxième confinement")
+plot(conf2_r_agr, xlab = "Temps",  ylab = "les déplacements vers les magasins de détails et de loisir (%)", main = "Deuxième confinement")
 abline(h = 0, col = "red", lty = 2)
 ```
-
 
 ```{r ts_workplaces}
 # Solène sur la VAR = workplaces
